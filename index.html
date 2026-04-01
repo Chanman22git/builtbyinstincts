@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BuiltByInstincts — Chandru Builds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #030a0f;
+    --surface: #071420;
+    --surface2: #0c1f30;
+    --cyan: #00f5ff;
+    --cyan-dim: #00a8b5;
+    --orange: #ff6b2b;
+    --orange-dim: #b84a1e;
+    --white: #e8f4f8;
+    --muted: #4a7a8a;
+    --border: rgba(0,245,255,0.12);
+    --glow-cyan: 0 0 20px rgba(0,245,255,0.4), 0 0 60px rgba(0,245,255,0.1);
+    --glow-orange: 0 0 20px rgba(255,107,43,0.5), 0 0 60px rgba(255,107,43,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html {
+    scroll-behavior: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 100%;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 400;
+    overflow: visible;
+    cursor: none;
+    min-height: 100%;
+  }
+
+  /* ── CURSOR ── */
+  #cursor {
+    position: fixed; top: 0; left: 0;
+    width: 10px; height: 10px;
+    background: var(--cyan); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.08s, background 0.2s;
+    box-shadow: var(--glow-cyan);
+  }
+  #cursor-ring {
+    position: fixed; top: 0; left: 0;
+    width: 34px; height: 34px;
+    border: 1px solid rgba(0,245,255,0.45); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.12s ease-out;
+  }
+  body.hovering #cursor { transform: translate(-50%,-50%) scale(2.2); }
+  body.hovering #cursor-ring { transform: translate(-50%,-50%) scale(1.4); }
+
+  /* ── OVERLAYS ── */
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.035) 2px, rgba(0,0,0,0.035) 4px);
+    pointer-events: none; z-index: 1000;
+  }
+  .grid-bg {
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    padding: 22px 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 100;
+    background: linear-gradient(180deg, rgba(3,10,15,0.96) 0%, transparent 100%);
+    backdrop-filter: blur(4px);
+  }
+  .nav-logo {
+    font-family: 'Orbitron', monospace; font-weight: 900;
+    font-size: 1.05rem; letter-spacing: 0.16em;
+    color: var(--cyan); text-shadow: var(--glow-cyan); text-decoration: none;
+  }
+  .nav-logo span { color: var(--orange); }
+  .nav-links { display: flex; gap: 44px; list-style: none; }
+  .nav-links a {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.68rem;
+    letter-spacing: 0.2em; color: var(--muted); text-decoration: none;
+    text-transform: uppercase; transition: color 0.3s; position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
+    background: var(--cyan); transform: scaleX(0); transition: transform 0.3s; transform-origin: left;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 0 20px; overflow: hidden;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .orbit-container {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 800px; height: 800px;
+    pointer-events: none; z-index: -1;
+  }
+  .orbit {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 50%; border: 1px solid var(--border);
+    animation: orbitSpin linear infinite;
+  }
+  .orbit::after {
+    content: ''; position: absolute; top: 0; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 6px; height: 6px; background: var(--cyan);
+    border-radius: 50%; box-shadow: var(--glow-cyan);
+  }
+  .orbit-1 { width: 300px; height: 300px; animation-duration: 8s; }
+  .orbit-2 { width: 480px; height: 480px; animation-duration: 14s; border-color: rgba(255,107,43,0.1); }
+  .orbit-2::after { background: var(--orange); box-shadow: var(--glow-orange); top: auto; bottom: 0; transform: translate(-50%,50%); }
+  .orbit-3 { width: 680px; height: 680px; animation-duration: 22s; }
+  @keyframes orbitSpin { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
+
+  .hero-badge {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.63rem;
+    letter-spacing: 0.35em; color: var(--orange); text-transform: uppercase;
+    border: 1px solid rgba(255,107,43,0.3); padding: 6px 22px;
+    margin-bottom: 32px; position: relative;
+  }
+  .hero-badge::before, .hero-badge::after {
+    content: '//'; position: absolute; top: 50%; transform: translateY(-50%);
+    color: var(--orange-dim); font-size: 0.6rem;
+  }
+  .hero-badge::before { left: -22px; }
+  .hero-badge::after { right: -22px; }
+
+  .hero-title {
+    font-family: 'Orbitron', monospace; font-weight: 900;
+    font-size: clamp(3rem, 8vw, 7rem); line-height: 1;
+    letter-spacing: 0.05em;
+  }
+  .hero-title .line1 { display: block; color: var(--white); }
+  .hero-title .line2 {
+    display: block; position: relative;
+    background: linear-gradient(90deg, var(--cyan), var(--orange));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    filter: drop-shadow(0 0 30px rgba(0,245,255,0.3));
+  }
+  .hero-title .line2::before,
+  .hero-title .line2::after {
+    content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%;
+    background: linear-gradient(90deg, var(--cyan), var(--orange));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero-title .line2::before { animation: glitch1 5s infinite; clip-path: polygon(0 0,100% 0,100% 38%,0 38%); transform:translate(-3px,0); }
+  .hero-title .line2::after  { animation: glitch2 5s infinite; clip-path: polygon(0 62%,100% 62%,100% 100%,0 100%); transform:translate(3px,0); }
+  @keyframes glitch1 { 0%,88%,100%{opacity:0} 90%{opacity:1;transform:translate(-5px,-2px)} 93%{opacity:1;transform:translate(3px,0)} 95%{opacity:0} }
+  @keyframes glitch2 { 0%,88%,100%{opacity:0} 91%{opacity:1;transform:translate(5px,2px)} 94%{opacity:1;transform:translate(-3px,0)} 96%{opacity:0} }
+
+  .hero-sub {
+    margin-top: 28px; font-size: 1.1rem; font-weight: 300;
+    letter-spacing: 0.15em; color: var(--muted);
+  }
+  .hero-sub span { color: var(--cyan); font-weight: 600; }
+
+  .hero-cta { margin-top: 56px; display: flex; gap: 20px; justify-content: center; }
+  .btn {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.68rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 14px 36px; text-decoration: none;
+    position: relative; overflow: hidden; transition: all 0.3s; cursor: none;
+  }
+  .btn-primary { background: transparent; color: var(--cyan); border: 1px solid var(--cyan); box-shadow: var(--glow-cyan); }
+  .btn-primary::before { content: ''; position: absolute; inset: 0; background: var(--cyan); transform: translateX(-100%); transition: transform 0.3s; z-index: -1; }
+  .btn-primary:hover { color: var(--bg); }
+  .btn-primary:hover::before { transform: translateX(0); }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid rgba(74,122,138,0.35); }
+  .btn-ghost:hover { color: var(--white); border-color: rgba(232,244,248,0.4); }
+
+  .scroll-indicator {
+    position: absolute; bottom: 44px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+  }
+  .scroll-indicator span {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.55rem;
+    letter-spacing: 0.45em; color: var(--muted); text-transform: uppercase;
+  }
+  .scroll-mouse {
+    width: 22px; height: 36px;
+    border: 1px solid rgba(0,245,255,0.25); border-radius: 11px;
+    position: relative; display: flex; justify-content: center; padding-top: 7px;
+  }
+  .scroll-mouse::before {
+    content: ''; width: 1px; height: 8px;
+    background: var(--cyan); border-radius: 1px;
+    animation: scrollWheel 2.2s cubic-bezier(0.4,0,0.2,1) infinite;
+    opacity: 0;
+  }
+  @keyframes scrollWheel {
+    0%   { opacity: 0; transform: translateY(0); }
+    20%  { opacity: 1; }
+    80%  { opacity: 0.2; }
+    100% { opacity: 0; transform: translateY(12px); }
+  }
+
+  /* ── SHARED ── */
+  section { position: relative; z-index: 1; }
+  .section-tag {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.63rem;
+    letter-spacing: 0.4em; color: var(--orange); text-transform: uppercase;
+    display: block; margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Orbitron', monospace; font-weight: 700;
+    font-size: clamp(1.8rem, 4vw, 3rem); color: var(--white); letter-spacing: 0.05em;
+  }
+  .section-title span { color: var(--cyan); }
+
+  /* ══════════════════════════════════════
+     PROJECTS — 2×2 CARD GRID
+  ══════════════════════════════════════ */
+  #projects {
+    padding: 0 60px;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .projects-header {
+    text-align: center;
+    padding: 52px 0 28px;
+    flex-shrink: 0;
+  }
+
+  .projects-list {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 0 52px;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 16px;
+    align-content: stretch;
+  }
+
+  /* ── card ── */
+  .prow {
+    position: relative;
+    cursor: none;
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 28px 28px 22px;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s ease, background 0.3s ease;
+    overflow: hidden;
+  }
+
+  .prow:hover {
+    background: var(--surface2);
+    border-color: color-mix(in srgb, var(--acc, var(--cyan)) 30%, transparent);
+  }
+
+  /* top accent line */
+  .prow::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--acc, var(--cyan));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+    box-shadow: 0 0 12px var(--acc, var(--cyan));
+  }
+  .prow:hover::before { transform: scaleX(1); }
+
+  /* remove old separators — not needed with cards */
+  .prow-sep { display: none; }
+  .prow:first-child, .prow:last-child { border: 1px solid rgba(255,255,255,0.05); }
+
+  /* left bar — repurposed as bottom-right corner accent */
+  .prow-bar { display: none; }
+
+  /* ambient glow */
+  .prow-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 80% at 20% 20%,
+      color-mix(in srgb, var(--acc, var(--cyan)) 6%, transparent),
+      transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+  .prow:hover .prow-bg { opacity: 1; }
+
+  /* card number — large watermark */
+  .prow-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 3.5rem; font-weight: 900;
+    letter-spacing: 0.05em;
+    color: var(--acc, var(--cyan));
+    opacity: 0.05;
+    position: absolute; top: 12px; right: 16px;
+    line-height: 1;
+    transition: opacity 0.3s;
+    width: auto;
+  }
+  .prow:hover .prow-num { opacity: 0.1; }
+
+  /* card header */
+  .prow-head {
+    position: relative; z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 0 12px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .prow-name {
+    font-family: 'Orbitron', monospace; font-weight: 700;
+    font-size: clamp(1rem, 1.6vw, 1.35rem);
+    letter-spacing: 0.04em; color: var(--white);
+    transition: color 0.3s;
+    flex-shrink: 0;
+    line-height: 1.2;
+  }
+  .prow:hover .prow-name { color: var(--acc, var(--cyan)); }
+
+  .prow-spacer { display: none; }
+
+  .prow-liner {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.88rem; font-weight: 300;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    line-height: 1.5;
+    transition: color 0.3s;
+    opacity: 1;
+    transform: none;
+    max-width: 100%;
+    text-align: left;
+  }
+  .prow:hover .prow-liner {
+    opacity: 0.8;
+    transform: none;
+    pointer-events: auto;
+    color: #8ab4c4;
+  }
+
+  .prow-arrow {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.2em;
+    color: var(--acc, var(--cyan));
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s, transform 0.3s;
+    margin-top: 4px;
+    align-self: flex-start;
+  }
+  .prow:hover .prow-arrow { opacity: 0.7; transform: translateY(0); }
+
+  /* ── tech chips ── */
+  .prow-tags {
+    display: flex; flex-wrap: wrap; gap: 5px;
+    padding: 0;
+    margin-top: auto; /* push to bottom of card */
+    padding-top: 14px;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+    position: relative; z-index: 1;
+  }
+  .prow:hover .prow-tags { opacity: 1; }
+
+  .prow-tag-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 9px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.03);
+    transition: border-color 0.25s, background 0.25s;
+  }
+  .prow:hover .prow-tag-chip {
+    border-color: color-mix(in srgb, var(--acc, var(--cyan)) 20%, transparent);
+    background: color-mix(in srgb, var(--acc, var(--cyan)) 4%, transparent);
+  }
+  .prow-tag-chip svg {
+    width: 13px; height: 13px; flex-shrink: 0; display: block;
+  }
+  .prow-tag-chip span {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    transition: color 0.25s;
+  }
+  .prow:hover .prow-tag-chip span {
+    color: color-mix(in srgb, var(--acc, var(--cyan)) 65%, var(--muted));
+  }
+
+  /* ══════════════════════════════════════
+     PROJECT MODAL
+  ══════════════════════════════════════ */
+  .proj-modal {
+    position: fixed; inset: 0; z-index: 800;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .proj-modal.open { opacity: 1; pointer-events: all; }
+
+  .proj-modal-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(2,7,12,0.85);
+    backdrop-filter: blur(24px) saturate(0.4);
+    -webkit-backdrop-filter: blur(24px) saturate(0.4);
+    cursor: none;
+  }
+
+  .proj-modal-card {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 800px;
+    background: rgba(4,12,20,0.98);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; flex-direction: column;
+    max-height: 88vh;
+    transform: translateY(32px) scale(0.97);
+    transition: transform 0.55s cubic-bezier(0.16,1,0.3,1);
+  }
+  .proj-modal.open .proj-modal-card {
+    transform: translateY(0) scale(1);
+  }
+  .proj-modal-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: var(--modal-acc, var(--cyan));
+    box-shadow: 0 0 28px var(--modal-acc, var(--cyan));
+    z-index: 2;
+  }
+
+  /* viewport clips the sliding track */
+  .proj-modal-viewport { overflow: hidden; flex: 1; position: relative; }
+
+  /* Each slide stacks absolutely, inactive is invisible */
+  .proj-modal-slides {
+    position: relative;
+    flex: 1;
+  }
+
+  .proj-modal-slide {
+    padding: 52px 64px 48px;
+    overflow-y: auto;
+    max-height: calc(88vh - 80px);
+    position: absolute; inset: 0;
+    opacity: 0;
+    transform: translateY(16px);
+    pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1),
+                transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .proj-modal-slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    position: relative;
+  }
+
+  /* eyebrow label */
+  .proj-modal-eyebrow {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.56rem; letter-spacing: 0.4em;
+    color: var(--modal-acc, var(--cyan));
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 30px; opacity: 0.7;
+  }
+  .proj-modal-eyebrow::before {
+    content: ''; width: 20px; height: 1px;
+    background: currentColor; flex-shrink: 0;
+  }
+
+  /* headline — story slide uses this big */
+  .proj-modal-headline {
+    font-family: 'Orbitron', monospace; font-weight: 700;
+    font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+    color: var(--white); letter-spacing: 0.03em;
+    line-height: 1.25; margin-bottom: 28px;
+  }
+
+  /* long-form prose — story slide */
+  .proj-modal-story {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.18rem; font-weight: 300;
+    line-height: 1.95; color: #b8d4de;
+  }
+  .proj-modal-story p + p { margin-top: 20px; }
+  .proj-modal-story strong {
+    color: var(--white); font-weight: 600;
+  }
+
+  /* solution slide */
+  .proj-modal-desc {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.1rem; font-weight: 300;
+    line-height: 1.88; color: #a8c8d8;
+    margin-bottom: 32px;
+  }
+
+  .proj-modal-status {
+    display: inline-flex; align-items: center; gap: 9px;
+    margin-bottom: 26px;
+  }
+  .proj-modal-status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    animation: dotPulse 2s infinite;
+  }
+  .proj-modal-status-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.57rem; letter-spacing: 0.24em;
+  }
+
+  .proj-modal-features { list-style: none; margin-bottom: 28px; }
+  .proj-modal-features li {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.05rem; font-weight: 400;
+    color: #9abfcc; padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: flex-start; gap: 14px; line-height: 1.5;
+  }
+  .proj-modal-features li::before {
+    content: '▸'; color: var(--modal-acc, var(--cyan));
+    font-size: 0.6rem; flex-shrink: 0; margin-top: 5px;
+  }
+
+  .proj-modal-pills-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.54rem; letter-spacing: 0.35em;
+    color: rgba(255,255,255,0.22); text-transform: uppercase;
+    margin-bottom: 12px; margin-top: 32px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .proj-modal-pills-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* ── TECH STACK BADGES ── */
+  .proj-modal-pills {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 4px;
+  }
+  .proj-modal-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 14px 7px 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    transition: border-color 0.25s, background 0.25s;
+    cursor: default;
+  }
+  .proj-modal-pill:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.18);
+  }
+  .proj-modal-pill img, .proj-modal-pill svg {
+    width: 16px; height: 16px;
+    flex-shrink: 0;
+    display: block;
+    object-fit: contain;
+  }
+  .proj-modal-pill span {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8ab4c4;
+    white-space: nowrap;
+  }
+
+  /* footer */
+  .proj-modal-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 64px 28px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    flex-shrink: 0;
+  }
+  .proj-modal-close {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.52rem; letter-spacing: 0.38em; text-transform: uppercase;
+    color: rgba(255,255,255,0.15); background: none; border: none;
+    cursor: none; transition: color 0.25s; padding: 0;
+  }
+  .proj-modal-close:hover { color: rgba(255,255,255,0.45); }
+
+  /* ── NAV DOTS ── */
+  .proj-modal-nav { display: flex; align-items: center; gap: 20px; }
+  .proj-modal-dots { display: flex; gap: 8px; align-items: center; }
+  .proj-modal-dot {
+    width: 18px; height: 2px;
+    background: rgba(255,255,255,0.08);
+    transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    cursor: none;
+  }
+  .proj-modal-dot.active {
+    width: 40px;
+    background: var(--modal-acc, var(--cyan));
+    box-shadow: 0 0 10px var(--modal-acc, var(--cyan));
+  }
+
+  /* ── FUTURISTIC SLIDE BUTTONS ── */
+  .proj-modal-btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+    background: transparent; cursor: none;
+    padding: 11px 28px;
+    position: relative;
+    border: none; outline: none;
+    transition: color 0.3s;
+    /* angled-cut shape */
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  }
+
+  /* the visible border — drawn via inset pseudo */
+  .proj-modal-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    border: 1px solid currentColor;
+    opacity: 0.45;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  /* scanline fill sweep on hover */
+  .proj-modal-btn::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 0%,
+      rgba(255,255,255,0.04) 40%,
+      currentColor 40%,
+      currentColor 60%,
+      transparent 60%
+    );
+    background-size: 300% 100%;
+    background-position: 100% 0;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: background-position 0.45s cubic-bezier(0.16,1,0.3,1),
+                opacity 0.3s;
+    opacity: 0;
+    z-index: -1;
+  }
+  .proj-modal-btn:hover::before { opacity: 1; }
+  .proj-modal-btn:hover::after {
+    background-position: 0% 0;
+    opacity: 1;
+  }
+  .proj-modal-btn:hover { color: var(--bg); }
+
+  .proj-modal-btn-next {
+    color: var(--modal-acc, var(--cyan));
+    box-shadow: inset 0 0 0 0 transparent;
+  }
+  .proj-modal-btn-next::before { border-color: var(--modal-acc, var(--cyan)); }
+  .proj-modal-btn-next::after  { background-color: var(--modal-acc, var(--cyan)); }
+  .proj-modal-btn-next:hover { color: var(--bg) !important; }
+
+  .proj-modal-btn-prev {
+    color: rgba(255,255,255,0.3);
+  }
+  .proj-modal-btn-prev[disabled] {
+    opacity: 0.1; pointer-events: none;
+  }
+  .proj-modal-btn-prev:not([disabled]):hover { color: var(--bg); }
+
+  /* ── SLIDE VISIBILITY — hidden until active ── */
+  .proj-modal-slides {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .proj-modal-slide {
+    padding: 52px 64px 48px;
+    overflow-y: auto;
+    max-height: calc(88vh - 100px);
+    position: absolute; inset: 0;
+    /* hidden state */
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: opacity 0.55s cubic-bezier(0.16,1,0.3,1),
+                transform 0.55s cubic-bezier(0.16,1,0.3,1);
+    visibility: hidden;
+  }
+
+  .proj-modal-slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    position: relative;
+    visibility: visible;
+  }
+
+  /* ══════════════════════════════════════
+     PROFILE CARD
+  ══════════════════════════════════════ */
+  .profile-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 2px;
+  }
+  .profile-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--cyan), #aa44ff, var(--orange));
+    z-index: 2;
+  }
+
+  .profile-banner {
+    height: 90px;
+    background: linear-gradient(135deg,
+      rgba(0,245,255,0.1) 0%,
+      rgba(170,68,255,0.12) 50%,
+      rgba(255,107,43,0.08) 100%);
+    position: relative; overflow: hidden;
+  }
+  .profile-banner::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.05) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  /* Animated scan line on banner */
+  .profile-banner::before {
+    content: '';
+    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,245,255,0.06), transparent);
+    animation: bannerScan 4s ease-in-out infinite;
+  }
+  @keyframes bannerScan { 0%{left:-60%} 100%{left:160%} }
+
+  .profile-body { padding: 0 24px 24px; }
+
+  .profile-avatar-wrap {
+    margin-top: -32px;
+    margin-bottom: 14px;
+    display: flex; align-items: flex-end; justify-content: space-between;
+  }
+
+  .profile-avatar {
+    width: 68px; height: 68px;
+    border-radius: 50%;
+    border: 2px solid var(--bg);
+    background: var(--surface2);
+    overflow: hidden;
+    box-shadow: 0 0 0 1.5px var(--cyan), var(--glow-cyan);
+    flex-shrink: 0;
+  }
+  .profile-avatar svg { width: 100%; height: 100%; }
+
+  .profile-name {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700; font-size: 1.1rem;
+    color: var(--white); letter-spacing: 0.05em;
+    margin-bottom: 5px;
+  }
+
+  .profile-headline {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.88rem; font-weight: 300;
+    color: #7a9faf; line-height: 1.55;
+    margin-bottom: 10px;
+  }
+
+  .profile-location {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 0.18em;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 6px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .profile-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 18px;
+  }
+  .profile-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.52rem; letter-spacing: 0.14em;
+    padding: 3px 10px;
+    border: 1px solid rgba(0,245,255,0.14);
+    color: rgba(0,245,255,0.45);
+    text-transform: uppercase;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .profile-tag:hover {
+    border-color: rgba(0,245,255,0.35);
+    color: rgba(0,245,255,0.8);
+  }
+
+  .profile-divider {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0,245,255,0.08), transparent);
+    margin: 16px 0;
+  }
+
+  .profile-section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.52rem; letter-spacing: 0.35em;
+    color: rgba(255,255,255,0.2); text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .profile-project-tags {
+    display: flex; flex-wrap: wrap; gap: 7px;
+    margin-bottom: 4px;
+  }
+  .profile-proj-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.12em;
+    padding: 4px 10px; text-transform: uppercase;
+    border: 1px solid color-mix(in srgb, var(--c,var(--cyan)) 30%, transparent);
+    color: var(--c, var(--cyan));
+    background: color-mix(in srgb, var(--c,var(--cyan)) 5%, transparent);
+    transition: background 0.2s;
+  }
+  .profile-proj-tag:hover {
+    background: color-mix(in srgb, var(--c,var(--cyan)) 12%, transparent);
+  }
+
+  .profile-linkedin-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: #0a66c2; border: 1px solid rgba(10,102,194,0.4);
+    padding: 9px 18px; text-decoration: none;
+    transition: all 0.25s; position: relative; overflow: hidden;
+    cursor: pointer;
+  }
+  .profile-linkedin-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(10,102,194,0.12);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .profile-linkedin-btn:hover { color: #fff; border-color: #0a66c2; }
+  .profile-linkedin-btn:hover::before { transform: scaleX(1); }
+
+  .profile-stats {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 2px; margin-top: 2px;
+  }
+
+  /* ══════════════════════════════════════
+     ABOUT
+  ══════════════════════════════════════ */
+  #about {
+    padding: 80px 60px;
+    background: linear-gradient(180deg, transparent, rgba(0,245,255,0.015) 50%, transparent);
+    height: 100vh;
+    min-height: 600px;
+    display: flex; align-items: center;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .about-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+  }
+  .about-text .section-title,
+  .about-text .section-tag { text-align: left; }
+  .about-text .section-title { margin-top: 14px; margin-bottom: 28px; }
+  .about-body { font-size: 1.02rem; line-height: 1.9; color: #7a9faf; margin-bottom: 36px; }
+  .about-body strong { color: var(--white); font-weight: 600; }
+
+  .progress-section { margin: 28px 0; }
+  .progress-item { margin-bottom: 15px; }
+  .progress-label {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.2em; color: var(--muted);
+    display: flex; justify-content: space-between; margin-bottom: 6px; text-transform: uppercase;
+  }
+  .progress-label span:last-child { color: var(--cyan); }
+  .progress-bar { height: 2px; background: rgba(0,245,255,0.08); position: relative; overflow: hidden; }
+  .progress-fill {
+    position: absolute; top: 0; left: 0; height: 100%;
+    background: linear-gradient(90deg, var(--cyan), var(--orange));
+    width: 0%; transition: width 1.5s ease 0.4s;
+  }
+  .reveal.visible .progress-fill { width: var(--w); }
+
+  .about-terminal { background: var(--surface); border: 1px solid var(--border); overflow: hidden; }
+  .terminal-header {
+    background: var(--surface2); padding: 12px 20px;
+    display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border);
+  }
+  .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .t-dot-r { background: #ff5f57; }
+  .t-dot-y { background: #febc2e; }
+  .t-dot-g { background: #28c840; }
+  .terminal-title { font-family: 'Share Tech Mono', monospace; font-size: 0.58rem; letter-spacing: 0.18em; color: var(--muted); margin-left: 8px; }
+  .terminal-body { font-family: 'Share Tech Mono', monospace; padding: 24px; font-size: 0.7rem; line-height: 2.05; color: #5a8a9a; }
+  .t-line { display: block; }
+  .t-prompt { color: var(--cyan); }
+  .t-key { color: #66ccff; }
+  .t-string { color: #ff9966; }
+  .t-cursor { display: inline-block; width: 8px; height: 13px; background: var(--cyan); animation: blink 1.2s step-end infinite; vertical-align: middle; }
+  @keyframes blink { 50%{opacity:0} }
+
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 2px; }
+  .stat-box { background: var(--surface); padding: 30px; text-align: center; transition: background 0.3s; }
+  .stat-box:hover { background: var(--surface2); }
+  .stat-number { font-family: 'Orbitron', monospace; font-size: 2.1rem; font-weight: 900; color: var(--cyan); text-shadow: var(--glow-cyan); display: block; }
+  .stat-label { font-family: 'Share Tech Mono', monospace; font-size: 0.58rem; letter-spacing: 0.25em; color: var(--muted); text-transform: uppercase; margin-top: 6px; display: block; }
+
+  /* ══════════════════════════════════════
+     CONTACT
+  ══════════════════════════════════════ */
+  #contact {
+    padding: 80px 60px 40px;
+    height: 100vh;
+    min-height: 600px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .contact-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+  .contact-subtitle { font-size: 1.05rem; color: var(--muted); margin: 20px 0 56px; line-height: 1.75; }
+  .contact-box { background: var(--surface); border: 1px solid var(--border); padding: 60px; position: relative; }
+  .contact-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), var(--orange)); }
+  .contact-email { font-family: 'Orbitron', monospace; font-size: clamp(0.95rem,2.5vw,1.35rem); color: var(--cyan); text-shadow: var(--glow-cyan); letter-spacing: 0.1em; margin-bottom: 40px; display: block; }
+  .corner-dec { position: absolute; width: 18px; height: 18px; pointer-events: none; }
+  .corner-dec.tl { top: 0; left: 0; border-top: 2px solid var(--cyan); border-left: 2px solid var(--cyan); }
+  .corner-dec.tr { top: 0; right: 0; border-top: 2px solid var(--cyan); border-right: 2px solid var(--cyan); }
+  .corner-dec.bl { bottom: 0; left: 0; border-bottom: 2px solid var(--cyan); border-left: 2px solid var(--cyan); }
+  .corner-dec.br { bottom: 0; right: 0; border-bottom: 2px solid var(--cyan); border-right: 2px solid var(--cyan); }
+
+  /* ── FOOTER ── */
+  footer { border-top: 1px solid var(--border); padding: 38px 64px; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1; }
+  .footer-logo { font-family: 'Orbitron', monospace; font-weight: 900; font-size: 0.88rem; letter-spacing: 0.16em; color: var(--cyan); }
+  .footer-logo span { color: var(--orange); }
+  .footer-copy { font-family: 'Share Tech Mono', monospace; font-size: 0.58rem; letter-spacing: 0.2em; color: var(--muted); }
+
+  /* ── HERO INTRO — all driven by JS, CSS just sets initial hidden state ── */
+  #hero-intro-cover {
+    position: fixed; inset: 0;
+    background: #000;
+    z-index: 500; /* above content but below cursor */
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.8s ease;
+  }
+  #hero-intro-cover.fade { opacity: 0; }
+
+  /* orbit-container needs to be above the cover during intro */
+  .orbit-container { z-index: 600; }
+
+  /* All hero text elements start hidden — JS reveals them */
+  .hero-badge,
+  .hero-title .line1,
+  .hero-title .line2,
+  .hero-sub,
+  .hero-cta,
+  .scroll-indicator {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1),
+                transform 0.7s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  /* Orbits start hidden too */
+  .orbit-container {
+    opacity: 0;
+    transform: translate(-50%,-50%) scale(0.5);
+    transition: opacity 1.4s cubic-bezier(0.16,1,0.3,1),
+                transform 1.8s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  /* Tubelight effect class — applied by JS */
+  .hero-title .line2.tubelight-on {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    animation: tubelight 1.4s ease forwards;
+  }
+  @keyframes tubelight {
+    0%   { opacity: 0;   filter: blur(6px)   brightness(4);   }
+    7%   { opacity: 0.9; filter: blur(1px)   brightness(5);   }
+    9%   { opacity: 0;   filter: blur(8px)   brightness(1);   }
+    17%  { opacity: 0.85;filter: blur(2px)   brightness(4);   }
+    19%  { opacity: 0.05;filter: blur(4px)   brightness(1);   }
+    26%  { opacity: 1;   filter: blur(0px)   brightness(3);   }
+    29%  { opacity: 0.3; filter: blur(3px)   brightness(1.5); }
+    38%  { opacity: 1;   filter: blur(1px)   brightness(2.2); }
+    52%  { opacity: 0.9; filter: blur(0.5px) brightness(1.8); }
+    100% { opacity: 1;   filter: blur(0)     brightness(1) drop-shadow(0 0 28px rgba(0,245,255,0.35)); }
+  }
+
+  /* revealed state for non-tubelight elements */
+  .hero-revealed {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+
+  /* Reveal: only hide if JS has initialised (js-ready class on body) */
+  .js-ready .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .js-ready .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Progress bars still need .visible regardless */
+  .reveal.visible .progress-fill { width: var(--w) !important; }
+  /* Project rows: taller rise, spring easing */
+  .prow.reveal {
+    transform: translateY(52px);
+    transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 860px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    #projects { height: auto; min-height: 100vh; }
+    .projects-header { padding: 60px 24px 24px; }
+    .projects-list { grid-template-columns: 1fr; grid-template-rows: auto; padding: 0 20px 40px; gap: 12px; }
+    .prow { padding: 20px 20px 16px; }
+    .prow-num { font-size: 2rem; }
+    .prow-name { font-size: 1rem; }
+    #about { padding: 60px 24px; height: auto; min-height: 100vh; }
+    .about-inner { grid-template-columns: 1fr; gap: 40px; }
+    .profile-stats { grid-template-columns: repeat(2,1fr); }
+    #contact { padding: 60px 24px; height: auto; min-height: 100vh; }
+    .contact-box { padding: 36px 24px; }
+    footer { padding: 28px 24px; flex-direction: column; gap: 14px; text-align: center; }
+    .orbit-container { width: 360px; height: 360px; }
+    .orbit-3 { width: 340px; height: 340px; }
+    .orbit-2 { width: 240px; height: 240px; }
+    .orbit-1 { width: 140px; height: 140px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="hero-intro-cover"></div>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div class="grid-bg"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">BUILT<span>BY</span>INSTINCTS</a>
+  <ul class="nav-links">
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="orbit-container">
+    <div class="orbit orbit-1"></div>
+    <div class="orbit orbit-2"></div>
+    <div class="orbit orbit-3"></div>
+  </div>
+  <div class="hero-badge">Chandru Builds · Product Portfolio</div>
+  <h1 class="hero-title">
+    <span class="line1">BUILT BY</span>
+    <span class="line2" data-text="INSTINCTS">INSTINCTS</span>
+  </h1>
+  <p class="hero-sub">Building <span>tomorrow's products</span> with today's vision</p>
+  <div class="hero-cta">
+    <a href="#projects" class="btn btn-primary">View Projects</a>
+    <a href="#contact" class="btn btn-ghost">Get In Touch</a>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-mouse"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ═══════════════ PROJECTS ═══════════════ -->
+<section id="projects">
+  <div class="projects-header reveal">
+    <span class="section-tag">// product portfolio</span>
+    <h2 class="section-title">Selected <span>Projects</span></h2>
+  </div>
+
+  <div class="projects-list">
+
+    <!-- 01 · MyPAIT -->
+    <div class="prow reveal" style="--acc:#00f5ff;"
+      data-acc="#00f5ff"
+      data-num="01"
+      data-name="MyPAIT"
+      data-tag="Mobile · AI · Fitness"
+      data-status="LIVE"
+      data-status-color="#00ff88"
+      data-problem-headline="The gym that was never built for you"
+      data-problem="You sign up, you show up, and then you stare at a screen full of exercises designed for someone else. Generic plans ignore your equipment, your schedule, your injuries, your goals. Fitness apps tell you what to do — none of them know who you are. So you either grind through something that doesn't fit, or you quit. Most people quit."
+      data-solution="An intelligent fitness companion that uses AI to generate personalized workout plans tailored to your exact profile — goals, equipment, schedule, and health data. You chat, it builds. Then it coaches you through every rep."
+      data-features='["Conversational onboarding that maps your full fitness profile","Dynamic workout splits via Gemini AI","Live session guidance with form cues &amp; exercise swaps","Progress tracking — streaks, volume &amp; personal bests","Health data integration — BMI reports &amp; bloodwork"]'
+      data-tech='["React / Vite","Supabase","Gemini AI","Capacitor"]'>
+      <div class="prow-bar"></div>
+      <div class="prow-bg"></div>
+      <div class="prow-head">
+        <span class="prow-num">01</span>
+        <h3 class="prow-name">MyPAIT</h3>
+        <span class="prow-spacer"></span>
+        <span class="prow-liner">Your gym in your pocket — built around you.</span>
+        <span class="prow-arrow">[ VIEW ]</span>
+      </div>
+      <div class="prow-tags">
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#61dafb"><path d="M12 10.11A1.87 1.87 0 1 1 10.13 12 1.86 1.86 0 0 1 12 10.11M7.37 20c.63.38 2-.2 3.6-1.7a24.22 24.22 0 0 1-1.51-1.9A22.7 22.7 0 0 1 7.06 16c-.51 2.14-.32 3.61.31 4m.71-5.74-.07-.07c-.36.77-.72 1.6-1 2.44A15.56 15.56 0 0 0 9 18.1 16 16 0 0 0 10 16.8a17.65 17.65 0 0 1-1.89-2.55m7.44 5.74c.63-.39.84-1.86.33-4a22.1 22.1 0 0 1-2.4.36 24.65 24.65 0 0 1-1.51 1.9c1.58 1.48 3 2.07 3.58 1.7M12 6.07A18.57 18.57 0 0 0 10 7.87c.65 0 1.32.07 2 .07s1.35 0 2-.07A18.57 18.57 0 0 0 12 6.07M7.37 4c-.63.39-.84 1.86-.33 4a22.1 22.1 0 0 1 2.4-.36 24.65 24.65 0 0 1 1.51-1.9C9.37 4.26 8 3.67 7.37 4m7.27 0C14 3.67 12.59 4.26 11 5.74a24.22 24.22 0 0 1 1.51 1.9 22.7 22.7 0 0 1 2.4.36c.51-2.14.32-3.61-.27-4M16.62 16c-.44.78-.89 1.48-1.38 2.1a15.56 15.56 0 0 0 2-.36A16.5 16.5 0 0 0 16.62 16m-.71-5.74A16 16 0 0 0 15 8.2a16 16 0 0 0-1-.86 17.65 17.65 0 0 1-1.89 2.55l-.07.07c.65.1 1.3.24 1.93.42z"/></svg><span>React / Vite</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#3ecf8e"><path d="M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C.111 12.876.706 14.09 1.824 14.09h9.174l.902 8.874c.015.987 1.26 1.41 1.874.637l9.261-11.652c.652-.826.057-2.038-1.06-2.038h-9.175z"/></svg><span>Supabase</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#0a1628"/><path d="M12 3c0 5 3 8 9 9-6 1-9 4-9 9-0-5-3-8-9-9 6-1 9-4 9-9z" fill="#8ab4f8"/></svg><span>Gemini AI</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#001f3f"/><path d="M5 12h4M15 12h4M10 7l-2 5 2 5M14 7l2 5-2 5" stroke="#53b9ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Capacitor</span></div>
+      </div>
+    </div>
+
+    <div class="prow-sep"></div>
+
+    <!-- 02 · Penny Drop -->
+    <div class="prow reveal" style="--acc:#00e5b0;"
+      data-acc="#00e5b0"
+      data-num="02"
+      data-name="Penny Drop"
+      data-tag="Web · Fintech · AI"
+      data-status="IN DEVELOPMENT"
+      data-status-color="#ffaa00"
+      data-problem-headline="You're paying for things you've forgotten exist"
+      data-problem="Subscriptions don't announce themselves. They slip through on different cards, get buried in spam folders, auto-renew without a whisper. One day you check your bank statement and realise you've been paying for three tools you stopped using six months ago. Nobody tracks this. Most people don't even know where to start."
+      data-solution="A subscription intelligence layer that pulls invoices straight from your Gmail, surfaces what you're actually paying for, and tells you what's worth it. Built for the generation that subscribes to everything and audits nothing."
+      data-features='["Auto-extracts subscriptions from Gmail — zero manual entry","Contextual AI research on every app &amp; service you pay for","Upcoming renewal tracker — 7-day cost projections","Smart categories: Productivity, Streaming, Finance &amp; more","Actionable savings — avg. user recovers ₹13,200/year"]'
+      data-tech='["Gmail API","Next.js","AI Research","Supabase"]'>
+      <div class="prow-bar"></div>
+      <div class="prow-bg"></div>
+      <div class="prow-head">
+        <span class="prow-num">02</span>
+        <h3 class="prow-name">Penny Drop</h3>
+        <span class="prow-spacer"></span>
+        <span class="prow-liner">Every subscription you pay for should be intentional.</span>
+        <span class="prow-arrow">[ VIEW ]</span>
+      </div>
+      <div class="prow-tags">
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24"><path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg><span>Gmail API</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#ffffff"><path d="M11.572 0c-.176 0-.31.001-.358.007a19.76 19.76 0 0 1-.364.033C7.443.346 4.25 2.185 2.228 5.012a11.875 11.875 0 0 0-2.119 5.243c-.096.659-.108.854-.108 1.747s.012 1.089.108 1.748c.652 4.506 3.86 8.292 8.209 9.695.779.25 1.6.422 2.534.525.363.04 1.935.04 2.299 0 1.611-.178 2.977-.577 4.323-1.264.207-.106.247-.134.219-.158-.02-.013-.9-1.193-1.955-2.62l-1.919-2.592-2.404-3.558a338.739 338.739 0 0 0-2.422-3.556c-.009-.002-.018 1.579-.023 3.51-.007 3.38-.01 3.515-.052 3.595a.426.426 0 0 1-.206.214c-.075.037-.14.044-.495.044H7.81l-.108-.068a.438.438 0 0 1-.157-.171l-.05-.106.006-4.703.007-4.705.072-.092a.645.645 0 0 1 .174-.143c.096-.047.134-.051.54-.051.478 0 .558.018.682.154.035.038 1.337 1.999 2.895 4.361a10760.433 10760.433 0 0 0 4.735 7.17l1.9 2.879.096-.063a12.317 12.317 0 0 0 2.466-2.163 11.944 11.944 0 0 0 2.824-6.134c.096-.66.108-.854.108-1.748 0-.893-.012-1.088-.108-1.747-.652-4.506-3.859-8.292-8.208-9.695a12.597 12.597 0 0 0-2.499-.523A33.119 33.119 0 0 0 11.573 0z"/></svg><span>Next.js</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#150a28"/><circle cx="12" cy="10" r="4" stroke="#aa44ff" stroke-width="1.5"/><path d="M15 13.5l3.5 3.5" stroke="#aa44ff" stroke-width="1.8" stroke-linecap="round"/><path d="M12 6V4M8 7.5L6.5 6M16 7.5L17.5 6" stroke="#aa44ff" stroke-width="1.5" stroke-linecap="round"/></svg><span>AI Research</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#3ecf8e"><path d="M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C.111 12.876.706 14.09 1.824 14.09h9.174l.902 8.874c.015.987 1.26 1.41 1.874.637l9.261-11.652c.652-.826.057-2.038-1.06-2.038h-9.175z"/></svg><span>Supabase</span></div>
+      </div>
+    </div>
+
+    <div class="prow-sep"></div>
+
+    <!-- 03 · Cost Protocol -->
+    <div class="prow reveal" style="--acc:#ff6b2b;"
+      data-acc="#ff6b2b"
+      data-num="03"
+      data-name="Cost Protocol"
+      data-tag="AI Governance · Agents · OSS"
+      data-status="PROOF OF CONCEPT"
+      data-status-color="#ff6b2b"
+      data-problem-headline="AI agents are spending money — and nobody can explain how"
+      data-problem="When an AI agent books travel, it doesn't just click a button. It reasons through options, calls tools, negotiates across providers — generating cost at every step of the decision, not just at checkout. Traditional payment systems were built for humans. They have no concept of an autonomous agent spending on your behalf. The costs are real. The accountability is zero."
+      data-solution="A proof-of-concept for AIGP — AI Governance Protocol — an open standard for tracking, attributing, and auditing the true cost of AI agent activity. Every token, every tool call, every agent-to-agent handoff is cryptographically chained into an audit trail that answers: where exactly is my AI spending my money, and why?"
+      data-features='["AIGP open standard — instruments every inference, tool call &amp; agent handoff","Multi-agent travel scenario — flight, hotel &amp; transport agents in parallel","Every AI cost attributed to the exact agent, reasoning step &amp; provider","Cryptographic audit trail — JWS ES256 signing + Merkle-SHA256 hashing","Fully local — zero external dependencies beyond a single API key"]'
+      data-tech='["Python","LangGraph","Claude API","Streamlit","SQLite","JWS ES256"]'>
+      <div class="prow-bar"></div>
+      <div class="prow-bg"></div>
+      <div class="prow-head">
+        <span class="prow-num">03</span>
+        <h3 class="prow-name">Cost Protocol</h3>
+        <span class="prow-spacer"></span>
+        <span class="prow-liner">AI agents spend your money. Now you can see exactly where.</span>
+        <span class="prow-arrow">[ VIEW ]</span>
+      </div>
+      <div class="prow-tags">
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24"><path fill="#3776ab" d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05L0 11.97l.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.26-.01h2.7z"/><path fill="#ffd43b" d="M12.58 23.82l-.9-.2-.73-.26-.59-.3-.45-.32-.34-.34-.25-.34-.16-.33-.1-.3-.04-.26-.02-.2.01-.13v-5.34l.05-.63.13-.55.21-.46.26-.38.3-.31.33-.25.35-.19.35-.14.33-.1.3-.07.26-.04.21-.02h5.95l.69-.05.59-.14.5-.22.41-.27.33-.32.27-.35.2-.36.15-.37.1-.35.07-.32.04-.27.02-.21v-3.06h2.79l.21.03.28.07.32.12.35.18.36.26.36.36.35.46.32.59.28.73.21.88.14 1.05.05 1.23-.06 1.22z"/></svg><span>Python</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1c3a5e"/><circle cx="7" cy="12" r="2.5" fill="#1c8ef9"/><circle cx="17" cy="7" r="2.5" fill="#1c8ef9"/><circle cx="17" cy="17" r="2.5" fill="#1c8ef9"/><path d="M9 11l6-3M9 13l6 3" stroke="#1c8ef9" stroke-width="1.5" stroke-linecap="round"/></svg><span>LangGraph</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1a0f0a"/><path d="M7 17l3.5-10 3.5 10M8.5 13h5" stroke="#d4a27f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="8" r="2" fill="#d4a27f"/></svg><span>Claude API</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#ff4b4b"><path d="M14.898 2.572a.5.5 0 0 0-.796 0L7.36 11.4a.5.5 0 0 0 .398.8h13.485a.5.5 0 0 0 .397-.8l-6.742-8.828zM14.898 14.372a.5.5 0 0 0-.796 0l-6.742 8.828a.5.5 0 0 0 .398.8h13.485a.5.5 0 0 0 .397-.8l-6.742-8.828z"/></svg><span>Streamlit</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#44a8dd"><path d="M21.678.521C20.467-.29 19.087.098 18.044.917c-1.533 1.19-2.74 3.354-3.443 5.596-.47-1.56-1.43-2.825-2.823-2.9C7.425 3.306 1.066 7.3.104 12.847c-.62 3.573.448 7.03 2.733 9.184 1.033.967 2.283 1.633 3.637 2.013C4.33 23.925 2.99 22.39 2.66 20.021c-1.574-2.123-2.21-5.064-1.665-7.84C2.123 6.484 7.3 2.757 11.849 3.678c1.225.245 2.34.77 3.285 1.502-.128.655-.22 1.314-.264 1.977-.105 1.584.056 3.16.456 4.67.44 1.635 1.15 3.048 2.082 4.048-1.26 4.05-.43 7.38 2.52 8.22.278.08.56.132.843.163C23.715 23.914 24 21.645 24 19.157V4.843C24 2.355 22.888.521 21.678.521z"/></svg><span>SQLite</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1a1000"/><rect x="5" y="11" width="14" height="9" rx="2" stroke="#f5a623" stroke-width="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="15.5" r="1.5" fill="#f5a623"/></svg><span>JWS ES256</span></div>
+      </div>
+    </div>
+
+    <div class="prow-sep"></div>
+
+    <!-- 04 · Project Utopia -->
+    <div class="prow reveal" style="--acc:#aa44ff;"
+      data-acc="#aa44ff"
+      data-num="04"
+      data-name="Project Utopia"
+      data-tag="Data · AI Agent · Platform"
+      data-status="IN DEVELOPMENT"
+      data-status-color="#aa44ff"
+      data-problem-headline="Getting a new dataset into production takes weeks. It shouldn't."
+      data-problem="Every time a team needs to onboard a new data source, the same painful process begins — manual schema mapping, hand-written pipelines, back-and-forth on data contracts, governance tickets that sit in queues. It takes weeks of engineering time for something that should be routine. The tooling exists. The orchestration doesn't."
+      data-solution="An AI-powered data onboarding agent that automates the full lifecycle from raw ingestion to consumption-ready views. Point it at a file, a live database, or a public dataset — it ingests, transforms, contracts, catalogs, and deploys end-to-end. LangGraph orchestrates an 8-step agentic workflow with human-in-the-loop checkpoints, every approval committed to Git."
+      data-features='["LangGraph agentic workflow — 8 steps, human-in-the-loop gates","Multi-source ingestion — local files, Postgres, Kaggle, FRED, Hugging Face &amp; more","Schema-aware Q&amp;A captures join strategy, dedup keys &amp; PII masking before codegen","Data quality enforced via Soda Core (SodaCL) &amp; Data Contract CLI (ODCS)","Full governance stack — DataHub catalog, lineage, access policies &amp; observability","Open-source throughout — DuckDB, Airflow, MinIO, Apache Iceberg, Git-as-truth"]'
+      data-tech='["LangGraph","DuckDB","Apache Airflow","Apache Iceberg","DataHub OSS","Soda Core","MinIO"]'>
+      <div class="prow-bar"></div>
+      <div class="prow-bg"></div>
+      <div class="prow-head">
+        <span class="prow-num">04</span>
+        <h3 class="prow-name">Project Utopia</h3>
+        <span class="prow-spacer"></span>
+        <span class="prow-liner">From raw data to production-ready — in minutes, not weeks.</span>
+        <span class="prow-arrow">[ VIEW ]</span>
+      </div>
+      <div class="prow-tags">
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1c3a5e"/><circle cx="7" cy="12" r="2.5" fill="#1c8ef9"/><circle cx="17" cy="7" r="2.5" fill="#1c8ef9"/><circle cx="17" cy="17" r="2.5" fill="#1c8ef9"/><path d="M9 11l6-3M9 13l6 3" stroke="#1c8ef9" stroke-width="1.5" stroke-linecap="round"/></svg><span>LangGraph</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="12" fill="#1a1400"/><circle cx="12" cy="12" r="8" fill="#ffcc00" opacity="0.15" stroke="#ffcc00" stroke-width="1.5"/><circle cx="9.5" cy="12" r="3" fill="#ffcc00"/><circle cx="14.5" cy="12" r="3" fill="#1a1400" stroke="#ffcc00" stroke-width="1.5"/></svg><span>DuckDB</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#017cee"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8zm-1-13v6l5 3-1 1.73-6-3.73V7h2z"/></svg><span>Airflow</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#071a2b"/><polygon points="12,3 21,18 3,18" fill="none" stroke="#5ea7d4" stroke-width="1.5"/><polygon points="12,9 17,18 7,18" fill="#5ea7d4" opacity="0.4"/></svg><span>Iceberg</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#041c1a"/><circle cx="12" cy="7" r="2.5" fill="#09b7a5"/><circle cx="5" cy="17" r="2.5" fill="#09b7a5"/><circle cx="19" cy="17" r="2.5" fill="#09b7a5"/><path d="M12 9.5v3M12 12.5l-5 3M12 12.5l5 3" stroke="#09b7a5" stroke-width="1.5" stroke-linecap="round"/></svg><span>DataHub</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1a0a06"/><path d="M12 4c-4.4 0-8 2.7-8 6 0 2 1.3 3.7 3.3 4.8L6 20h12l-1.3-5.2C18.7 13.7 20 12 20 10c0-3.3-3.6-6-8-6z" fill="#ff6d4a" opacity="0.3" stroke="#ff6d4a" stroke-width="1.5"/></svg><span>Soda Core</span></div>
+        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#c72e49"><path d="M7.286 0v24l4.357-4.364V4.355L7.286 0zm9.428 0l-4.357 4.355v15.281L16.714 24V0z"/></svg><span>MinIO</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ PROJECT MODAL ═══════════════ -->
+<div class="proj-modal" id="proj-modal">
+  <div class="proj-modal-backdrop"></div>
+  <div class="proj-modal-card">
+
+    <div class="proj-modal-viewport">
+      <div class="proj-modal-slides">
+
+        <!-- Slide 0: Problem -->
+        <div class="proj-modal-slide active">
+          <div class="proj-modal-eyebrow prob-eyebrow">The Problem</div>
+          <h2 class="proj-modal-headline prob-headline"></h2>
+          <div class="proj-modal-body prob-body"></div>
+        </div>
+
+        <!-- Slide 1: Solution -->
+        <div class="proj-modal-slide">
+          <div class="proj-modal-eyebrow sol-subtitle"></div>
+          <div class="proj-modal-status">
+            <div class="proj-modal-status-dot sol-status-dot"></div>
+            <span class="proj-modal-status-text sol-status-text"></span>
+          </div>
+          <h2 class="proj-modal-headline sol-name"></h2>
+          <p class="proj-modal-desc sol-desc"></p>
+          <ul class="proj-modal-features sol-features"></ul>
+          <div class="proj-modal-pills-label">Stack</div>
+          <div class="proj-modal-pills sol-pills"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="proj-modal-footer">
+      <button class="proj-modal-close">[ ESC ] Close</button>
+      <div class="proj-modal-nav">
+        <div class="proj-modal-dots">
+          <div class="proj-modal-dot active" data-slide="0"></div>
+          <div class="proj-modal-dot" data-slide="1"></div>
+        </div>
+        <button class="proj-modal-btn proj-modal-btn-prev proj-modal-prev" disabled>← Back</button>
+        <button class="proj-modal-btn proj-modal-btn-next proj-modal-next">The Build →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner">
+
+    <!-- LEFT: Profile card -->
+    <div class="reveal">
+      <div class="profile-card">
+        <div class="profile-banner">
+          <!-- Animated grid lines on banner -->
+          <div class="profile-banner-code">
+            <span>// product_builder.init()</span>
+            <span>// instinct_mode = true</span>
+            <span>// loading projects...</span>
+          </div>
+        </div>
+        <div class="profile-body">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar" id="profile-avatar">
+              <!-- Photo loads via JS; SVG monogram shown as fallback -->
+              <svg id="avatar-fallback" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <radialGradient id="avatarGrad" cx="40%" cy="35%" r="65%">
+                    <stop offset="0%" stop-color="#0d2d45"/>
+                    <stop offset="100%" stop-color="#071420"/>
+                  </radialGradient>
+                  <linearGradient id="cGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00f5ff"/>
+                    <stop offset="100%" stop-color="#aa44ff"/>
+                  </linearGradient>
+                </defs>
+                <rect width="64" height="64" fill="url(#avatarGrad)"/>
+                <line x1="0" y1="32" x2="64" y2="32" stroke="rgba(0,245,255,0.06)" stroke-width="1"/>
+                <line x1="32" y1="0" x2="32" y2="64" stroke="rgba(0,245,255,0.06)" stroke-width="1"/>
+                <path d="M4 4 L12 4 M4 4 L4 12" stroke="rgba(0,245,255,0.25)" stroke-width="1.2" fill="none"/>
+                <path d="M60 60 L52 60 M60 60 L60 52" stroke="rgba(0,245,255,0.25)" stroke-width="1.2" fill="none"/>
+                <text x="32" y="43" text-anchor="middle" font-family="'Orbitron', monospace" font-weight="900" font-size="28" fill="url(#cGrad)" letter-spacing="-1">C</text>
+              </svg>
+            </div>
+          </div>
+          <div class="profile-info">
+            <h3 class="profile-name">Chandru</h3>
+            <p class="profile-headline">Building products at the intersection of AI, data, and human behaviour</p>
+            <p class="profile-location">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              Bengaluru, India
+            </p>
+            <!-- focus tags -->
+            <div class="profile-tags">
+              <span class="profile-tag">AI Agents</span>
+              <span class="profile-tag">Data Engineering</span>
+              <span class="profile-tag">Product</span>
+              <span class="profile-tag">Open Source</span>
+            </div>
+            <a href="https://linkedin.com/in/chandrasekarv22" target="_blank" rel="noopener" class="profile-linkedin-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              linkedin.com/in/chandrasekarv22
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-stats reveal">
+        <div class="stat-box"><span class="stat-number">4</span><span class="stat-label">Products</span></div>
+        <div class="stat-box"><span class="stat-number">∞</span><span class="stat-label">Ideas</span></div>
+        <div class="stat-box"><span class="stat-number">01</span><span class="stat-label">Builder</span></div>
+        <div class="stat-box"><span class="stat-number">100%</span><span class="stat-label">By Instinct</span></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Bio + terminal -->
+    <div class="about-text reveal">
+      <span class="section-tag">// about the builder</span>
+      <h2 class="section-title">Chandru <span>Builds</span></h2>
+      <p class="about-body">
+        I'm a <strong>product builder</strong> driven by instinct — I build things that feel right before they look right. My work sits at the intersection of <strong>technology, design, and human behaviour</strong>.
+        <br><br>
+        Every project I ship is a bet on a future I believe in. Whether it's rethinking personal fitness, making subscriptions conscious, auditing AI agent costs, or automating data governance — I chase problems worth solving.
+      </p>
+
+      <div class="about-terminal reveal">
+        <div class="terminal-header">
+          <div class="t-dot t-dot-r"></div>
+          <div class="t-dot t-dot-y"></div>
+          <div class="t-dot t-dot-g"></div>
+          <span class="terminal-title">chandru@builtbyinstincts ~ builder.json</span>
+        </div>
+        <div class="terminal-body">
+          <span class="t-line"><span class="t-prompt">$</span> cat builder.json</span>
+          <span class="t-line">&nbsp;</span>
+          <span class="t-line">{</span>
+          <span class="t-line">&nbsp;&nbsp;<span class="t-key">"name"</span>: <span class="t-string">"Chandru"</span>,</span>
+          <span class="t-line">&nbsp;&nbsp;<span class="t-key">"alias"</span>: <span class="t-string">"BuiltByInstincts"</span>,</span>
+          <span class="t-line">&nbsp;&nbsp;<span class="t-key">"role"</span>: <span class="t-string">"Product &amp; Data Builder"</span>,</span>
+          <span class="t-line">&nbsp;&nbsp;<span class="t-key">"approach"</span>: <span class="t-string">"Instinct-first"</span>,</span>
+          <span class="t-line">&nbsp;&nbsp;<span class="t-key">"projects"</span>: [</span>
+          <span class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-string">"MyPAIT"</span>,</span>
+          <span class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-string">"Penny Drop"</span>,</span>
+          <span class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-string">"Cost Protocol"</span>,</span>
+          <span class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-string">"Project Utopia"</span></span>
+          <span class="t-line">&nbsp;&nbsp;],</span>
+          <span class="t-line">&nbsp;&nbsp;<span class="t-key">"status"</span>: <span class="t-string">"always building"</span></span>
+          <span class="t-line">}</span>
+          <span class="t-line">&nbsp;</span>
+          <span class="t-line"><span class="t-prompt">$</span> <span class="t-cursor"></span></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="reveal">
+      <span class="section-tag">// let's build something</span>
+      <h2 class="section-title">Start a <span>Conversation</span></h2>
+      <p class="contact-subtitle">Have a product idea, a collaboration in mind, or just want to talk about building things that matter?</p>
+    </div>
+    <div class="contact-box reveal">
+      <div class="corner-dec tl"></div><div class="corner-dec tr"></div>
+      <div class="corner-dec bl"></div><div class="corner-dec br"></div>
+      <span class="contact-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="49212c252526092b3c20253d2b3020273a3d20272a3d3a672a2624">[email&#160;protected]</a></span>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="/cdn-cgi/l/email-protection#1f777a7373705f7d6a76736b7d6676716c6b76717c6b6c317c7072" class="btn btn-primary">Send Message</a>
+        <a href="#" class="btn btn-ghost">View GitHub</a>
+      </div>
+      <div style="margin-top:38px;padding-top:38px;border-top:1px solid rgba(0,245,255,0.07);">
+        <p style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.22em;color:var(--muted);text-transform:uppercase;">
+          Based in <span style="color:var(--cyan);">India</span> · Building for the World
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">BUILT<span>BY</span>INSTINCTS</div>
+  <div class="footer-copy">© 2025 Chandru · All systems nominal</div>
+</footer>
+
+<script>
+  /* ══════════════════════════════════════
+     HERO INTRO — JS-driven, precise timing
+  ══════════════════════════════════════ */
+  (function() {
+    const cover   = document.getElementById('hero-intro-cover');
+    const orbits  = document.querySelector('.orbit-container');
+    const badge   = document.querySelector('.hero-badge');
+    const line1   = document.querySelector('.hero-title .line1');
+    const line2   = document.querySelector('.hero-title .line2');
+    const sub     = document.querySelector('.hero-sub');
+    const cta     = document.querySelector('.hero-cta');
+    const scroll  = document.querySelector('.scroll-indicator');
+
+    function reveal(el) {
+      el.classList.add('hero-revealed');
+    }
+
+    // Phase 0 → immediately: orbits appear (cover still up, orbits z-index above it)
+    setTimeout(() => {
+      orbits.style.opacity = '1';
+      orbits.style.transform = 'translate(-50%,-50%) scale(1)';
+    }, 100);
+
+    // Phase 1 → 3000ms: fade cover away, reveal "BUILT BY" text area
+    setTimeout(() => {
+      cover.classList.add('fade');
+    }, 3000);
+
+    // Phase 2 → 3400ms: badge slides in
+    setTimeout(() => reveal(badge), 3400);
+
+    // Phase 3 → 3750ms: "BUILT BY" slides in
+    setTimeout(() => reveal(line1), 3750);
+
+    // Phase 4 → 4200ms: "INSTINCTS" tubelight flicker
+    setTimeout(() => {
+      line2.classList.add('tubelight-on');
+    }, 4200);
+
+    // Phase 5 → 5700ms: subtitle
+    setTimeout(() => reveal(sub), 5700);
+
+    // Phase 6 → 6000ms: CTA buttons
+    setTimeout(() => reveal(cta), 6000);
+
+    // Phase 7 → 6300ms: scroll indicator
+    setTimeout(() => reveal(scroll), 6300);
+
+    // Cleanup: remove cover from DOM after it fades
+    setTimeout(() => {
+      if (cover) cover.remove();
+    }, 4200);
+  })();
+
+  /* ── ANCHOR SCROLL ── */
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const dest = document.querySelector(a.getAttribute('href'));
+    if (!dest) return;
+    e.preventDefault();
+    dest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  /* ── JS SECTION SNAPPING ── */
+  (function() {
+    const sections = Array.from(document.querySelectorAll('#hero, #projects, #about, #contact'));
+    let isSnapping = false;
+    let lastSnap = 0;
+
+    function snapTo(el) {
+      isSnapping = true;
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top, behavior: 'smooth' });
+      setTimeout(() => { isSnapping = false; }, 900);
+    }
+
+    function getNearestSection() {
+      const mid = window.scrollY + window.innerHeight / 2;
+      return sections.reduce((closest, s) => {
+        const sTop = s.getBoundingClientRect().top + window.scrollY;
+        const sBot = sTop + s.offsetHeight;
+        const sMid = (sTop + sBot) / 2;
+        return Math.abs(sMid - mid) < Math.abs((closest.getBoundingClientRect().top + window.scrollY + closest.offsetHeight / 2) - mid) ? s : closest;
+      });
+    }
+
+    window.addEventListener('wheel', e => {
+      if (isSnapping) { e.preventDefault(); return; }
+      const now = Date.now();
+      if (now - lastSnap < 900) { e.preventDefault(); return; }
+
+      const dir = e.deltaY > 0 ? 1 : -1;
+      const current = getNearestSection();
+      const idx = sections.indexOf(current);
+      const next = sections[Math.max(0, Math.min(sections.length - 1, idx + dir))];
+
+      if (next !== current) {
+        e.preventDefault();
+        lastSnap = now;
+        snapTo(next);
+      }
+    }, { passive: false });
+
+    // Snap on touch
+    let touchY = 0;
+    window.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
+    window.addEventListener('touchend', e => {
+      if (isSnapping) return;
+      const dy = touchY - e.changedTouches[0].clientY;
+      if (Math.abs(dy) < 30) return;
+      const now = Date.now();
+      if (now - lastSnap < 900) return;
+      const dir = dy > 0 ? 1 : -1;
+      const current = getNearestSection();
+      const idx = sections.indexOf(current);
+      const next = sections[Math.max(0, Math.min(sections.length - 1, idx + dir))];
+      if (next !== current) { lastSnap = now; snapTo(next); }
+    }, { passive: true });
+  })();
+
+  /* ── CUSTOM CURSOR ── */
+  const cur  = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx=0,my=0,rx=0,ry=0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cur.style.left = mx+'px'; cur.style.top = my+'px';
+  });
+
+  (function tick(){
+    rx += (mx-rx) * 0.1;
+    ry += (my-ry) * 0.1;
+    ring.style.left = rx+'px'; ring.style.top = ry+'px';
+    requestAnimationFrame(tick);
+  })();
+
+  document.querySelectorAll('a, button, .prow, .stat-box').forEach(el => {
+    el.addEventListener('mouseenter', () => { cur.style.transform='translate(-50%,-50%) scale(2)'; ring.style.transform='translate(-50%,-50%) scale(1.5)'; });
+    el.addEventListener('mouseleave', () => { cur.style.transform='translate(-50%,-50%) scale(1)'; ring.style.transform='translate(-50%,-50%) scale(1)'; });
+  });
+
+  /* ── SCROLL REVEAL ── */
+  document.body.classList.add('js-ready');
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const delay = el.classList.contains('prow')
+          ? [...document.querySelectorAll('.prow')].indexOf(el) * 100 : 0;
+        setTimeout(() => el.classList.add('visible'), delay);
+        obs.unobserve(el);
+      }
+    });
+  }, { threshold: 0.01 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  setTimeout(() => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')), 2500);
+
+  /* ── PROJECT MODAL ── */
+  const modal    = document.getElementById('proj-modal');
+  const backdrop = modal.querySelector('.proj-modal-backdrop');
+  const allSlides = modal.querySelectorAll('.proj-modal-slide');
+  const dots     = modal.querySelectorAll('.proj-modal-dot');
+  const nextBtn  = modal.querySelector('.proj-modal-next');
+  const prevBtn  = modal.querySelector('.proj-modal-prev');
+  const closeBtn = modal.querySelector('.proj-modal-close');
+  let   curSlide = 0;
+
+  function goToSlide(n) {
+    // Remove active from current, wait a beat, show next
+    allSlides[curSlide].classList.remove('active');
+    dots[curSlide].classList.remove('active');
+
+    curSlide = n;
+
+    // Slight delay so the fade-out is visible before fade-in
+    setTimeout(() => {
+      allSlides[curSlide].classList.add('active');
+      dots[curSlide].classList.add('active');
+    }, 60);
+
+    prevBtn.disabled = n === 0;
+    nextBtn.textContent = n === 0 ? 'The Build →' : '✕ Close';
+  }
+
+  function openFromRow(row) {
+    const d = row.dataset;
+    const acc = d.acc || '#00f5ff';
+    modal.style.setProperty('--modal-acc', acc);
+
+    modal.querySelector('.prob-headline').textContent = d.problemHeadline || '';
+    modal.querySelector('.prob-body').innerHTML       = `<div class="proj-modal-story"><p>${d.problem || ''}</p></div>`;
+    modal.querySelector('.sol-subtitle').textContent  = d.tag || '';
+    modal.querySelector('.sol-name').textContent      = d.name || '';
+    modal.querySelector('.sol-desc').textContent      = d.solution || '';
+
+    const sdot = modal.querySelector('.sol-status-dot');
+    const stxt = modal.querySelector('.sol-status-text');
+    sdot.style.cssText = `background:${d.statusColor};box-shadow:0 0 8px ${d.statusColor};`;
+    stxt.style.color   = d.statusColor;
+    stxt.textContent   = d.status || '';
+
+    modal.querySelector('.sol-features').innerHTML =
+      JSON.parse(d.features || '[]').map(f => `<li>${f}</li>`).join('');
+
+    // ── Tech badges with inline SVG logos ──
+    const TECH = {
+      'react / vite': { label:'React / Vite', color:'#61dafb', svg:`<svg viewBox="0 0 24 24" fill="#61dafb"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38-.318-.184-.688-.277-1.092-.278zm-.005 1.09c.225 0 .406.044.558.127.666.382.955 1.835.73 3.704-.054.46-.143.945-.25 1.44-.96-.236-2.006-.417-3.107-.534-.66-.905-1.345-1.727-2.035-2.447 1.592-1.48 3.087-2.292 4.105-2.292zm-9.77.02c1.012 0 2.514.808 4.11 2.28-.686.72-1.37 1.537-2.02 2.442-1.107.117-2.154.298-3.113.538-.112-.49-.195-.964-.254-1.42-.23-1.868.054-3.32.714-3.707.19-.09.4-.127.563-.132zm4.882 3.05c.455.468.91.992 1.36 1.564-.44-.02-.89-.034-1.345-.034-.46 0-.915.01-1.36.034.44-.572.895-1.096 1.345-1.565zM12 8.1c.74 0 1.477.034 2.202.093.406.582.802 1.203 1.183 1.86.372.64.71 1.29 1.018 1.946-.308.655-.646 1.31-1.013 1.95-.38.66-.773 1.288-1.18 1.87-.728.063-1.466.098-2.21.098-.74 0-1.477-.035-2.202-.093-.406-.582-.802-1.204-1.183-1.86-.372-.64-.71-1.29-1.018-1.946.303-.657.646-1.313 1.013-1.954.38-.66.773-1.286 1.18-1.868.728-.064 1.466-.098 2.21-.098zm-3.635.254c-.24.377-.48.763-.704 1.16-.225.39-.435.782-.635 1.174-.265-.656-.49-1.31-.676-1.947.64-.15 1.315-.283 2.015-.387zm7.26 0c.695.103 1.365.23 2.006.387-.18.632-.405 1.282-.66 1.933-.2-.39-.41-.783-.64-1.174-.225-.392-.465-.774-.705-1.146zm3.063 2.26c.41-.04.81-.063 1.19-.063.8 0 1.51.09 2.088.247-.165.6-.44 1.23-.804 1.856-.357.613-.766 1.175-1.2 1.664.23-.97.397-1.958.494-2.94-.236-.266-.485-.528-.768-.764zm-15.36.004c-.285.235-.535.497-.768.762.097.98.26 1.97.49 2.94-.434-.49-.843-1.05-1.197-1.66-.366-.628-.64-1.256-.806-1.855.57-.157 1.282-.248 2.08-.248.377 0 .776.023 1.2.06zm6.09 5.23c.24-.375.48-.762.705-1.158.225-.39.435-.782.635-1.174.265.655.49 1.31.676 1.946-.64.15-1.315.283-2.015.386zm7.26 0c-.695-.103-1.365-.23-2.006-.387.18-.632.405-1.282.66-1.933.2.39.41.783.64 1.174.225.392.465.774.705 1.146zm-3.063 2.26c-.41.04-.81.063-1.19.063-.8 0-1.51-.09-2.088-.247.165-.6.44-1.23.804-1.856.357-.613.766-1.175 1.2-1.664-.23.97-.397 1.958-.494 2.94.236.266.485.528.768.764zm-8.9-.96c.434.49.843 1.05 1.197 1.66.366.628.64 1.256.806 1.855-.57-.157-1.282-.248-2.08-.248-.378 0-.777.023-1.2.06.285-.235.535-.497.768-.762-.097-.98-.26-1.97-.49-2.565zm4.882 2.19c-.455-.468-.91-.992-1.36-1.564.44.02.89.034 1.345.034.46 0 .915-.01 1.36-.034-.44.572-.895 1.096-1.345 1.565z"/></svg>` },
+      'react':    { label:'React',    color:'#61dafb', svg:`<svg viewBox="0 0 24 24" fill="#61dafb"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38z"/></svg>` },
+      'next.js':  { label:'Next.js',  color:'#ffffff', svg:`<svg viewBox="0 0 24 24" fill="#ffffff"><path d="M11.572 0c-.176 0-.31.001-.358.007a19.76 19.76 0 0 1-.364.033C7.443.346 4.25 2.185 2.228 5.012a11.875 11.875 0 0 0-2.119 5.243c-.096.659-.108.854-.108 1.747s.012 1.089.108 1.748c.652 4.506 3.86 8.292 8.209 9.695.779.25 1.6.422 2.534.525.363.04 1.935.04 2.299 0 1.611-.178 2.977-.577 4.323-1.264.207-.106.247-.134.219-.158-.02-.013-.9-1.193-1.955-2.62l-1.919-2.592-2.404-3.558a338.739 338.739 0 0 0-2.422-3.556c-.009-.002-.018 1.579-.023 3.51-.007 3.38-.01 3.515-.052 3.595a.426.426 0 0 1-.206.214c-.075.037-.14.044-.495.044H7.81l-.108-.068a.438.438 0 0 1-.157-.171l-.05-.106.006-4.703.007-4.705.072-.092a.645.645 0 0 1 .174-.143c.096-.047.134-.051.54-.051.478 0 .558.018.682.154.035.038 1.337 1.999 2.895 4.361a10760.433 10760.433 0 0 0 4.735 7.17l1.9 2.879.096-.063a12.317 12.317 0 0 0 2.466-2.163 11.944 11.944 0 0 0 2.824-6.134c.096-.66.108-.854.108-1.748 0-.893-.012-1.088-.108-1.747-.652-4.506-3.859-8.292-8.208-9.695a12.597 12.597 0 0 0-2.499-.523A33.119 33.119 0 0 0 11.573 0zm4.069 7.217c.347 0 .408.005.486.047a.473.473 0 0 1 .237.277c.018.06.023 1.365.018 4.304l-.006 4.218-.744-1.14-.746-1.14v-3.066c0-1.982.01-3.097.023-3.15a.478.478 0 0 1 .233-.296c.096-.05.13-.054.5-.054z"/></svg>` },
+      'supabase': { label:'Supabase', color:'#3ecf8e', svg:`<svg viewBox="0 0 24 24" fill="#3ecf8e"><path d="M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C.111 12.876.706 14.09 1.824 14.09h9.174l.902 8.874c.015.987 1.26 1.41 1.874.637l9.261-11.652c.652-.826.057-2.038-1.06-2.038h-9.175L11.9 1.036z"/></svg>` },
+      'python':   { label:'Python',   color:'#3776ab', svg:`<svg viewBox="0 0 24 24"><path fill="#3776ab" d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05L0 11.97l.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.26-.01h.thus--.28-.02zM12.42 3.45c-.23 0-.44.07-.61.2l-.34.36-.22.5-.1.63.01.76.14.87.28.94.39.97.46.96.5.9.51.8.49.67.44.52.37.36.28.19H17l.06-.2.03-.41v-.62l-.05-.8-.12-.93-.2-1.02-.27-1.06-.33-1.06-.38-1.01-.41-.91-.43-.78-.42-.62-.4-.45-.36-.29-.31-.13z"/><path fill="#ffd43b" d="M12.58 23.82l-.9-.2-.73-.26-.59-.3-.45-.32-.34-.34-.25-.34-.16-.33-.1-.3-.04-.26-.02-.2.01-.13v-5.34l.05-.63.13-.55.21-.46.26-.38.3-.31.33-.25.35-.19.35-.14.33-.1.3-.07.26-.04.21-.02h5.95l.69-.05.59-.14.5-.22.41-.27.33-.32.27-.35.2-.36.15-.37.1-.35.07-.32.04-.27.02-.21v-3.06h2.79l.21.03.28.07.32.12.35.18.36.26.36.36.35.46.32.59.28.73.21.88.14 1.05.05 1.23-.06 1.22-.16 1.04-.24.87-.32.71-.36.57-.4.44-.42.33-.42.24-.4.16-.36.1-.32.05-.26.01z"/></svg>` },
+      'langgraph': { label:'LangGraph', color:'#1c8ef9', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1c3a5e"/><circle cx="7" cy="12" r="2.5" fill="#1c8ef9"/><circle cx="17" cy="7" r="2.5" fill="#1c8ef9"/><circle cx="17" cy="17" r="2.5" fill="#1c8ef9"/><path d="M9 11l6-3M9 13l6 3" stroke="#1c8ef9" stroke-width="1.5" stroke-linecap="round"/></svg>` },
+      'claude api': { label:'Claude API', color:'#d4a27f', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1a0f0a"/><path d="M7 17l3.5-10 3.5 10M8.5 13h5" stroke="#d4a27f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="8" r="2" fill="#d4a27f"/></svg>` },
+      'streamlit': { label:'Streamlit', color:'#ff4b4b', svg:`<svg viewBox="0 0 24 24" fill="#ff4b4b"><path d="M14.898 2.572a.5.5 0 0 0-.796 0L7.36 11.4a.5.5 0 0 0 .398.8h13.485a.5.5 0 0 0 .397-.8l-6.742-8.828zM2.76 9.8a.5.5 0 0 0-.796 0L.121 12.2a.5.5 0 0 0 .398.8h3.685a.5.5 0 0 0 .397-.8L2.76 9.8zM14.898 14.372a.5.5 0 0 0-.796 0l-6.742 8.828a.5.5 0 0 0 .398.8h13.485a.5.5 0 0 0 .397-.8l-6.742-8.828z"/></svg>` },
+      'sqlite':    { label:'SQLite',    color:'#44a8dd', svg:`<svg viewBox="0 0 24 24" fill="#44a8dd"><path d="M21.678.521C20.467-.29 19.087.098 18.044.917a9.073 9.073 0 0 0-.471.426C16.04 2.846 14.834 5.01 14.13 7.252c-.124.4-.234.804-.332 1.21-1.04-.49-2.168-.803-3.36-.879C5.425 7.276 1.066 11.269.104 16.816c-.62 3.573.448 7.03 2.733 9.184h.001c1.033.967 2.283 1.633 3.637 2.013-.144-.119-.286-.24-.426-.366A11.67 11.67 0 0 1 2.66 24.02C1.086 21.897.45 18.956.995 16.18c1.128-5.697 6.304-9.424 10.854-8.503 1.225.245 2.34.77 3.285 1.502-.128.655-.22 1.314-.264 1.977-.105 1.584.056 3.16.456 4.67a13.41 13.41 0 0 0 1.29 3.187c-1.26 4.05-.43 7.38 2.52 8.22.278.08.56.132.843.163.01.003.02.004.03.005h.006c2.94.205 5.64-2.064 6.61-5.498.7-2.488.25-4.943-1.11-6.537-.87-1.02-2.06-1.59-3.38-1.63.42-1.75 1.19-3.44 2.24-4.95 1.12-1.6 2.53-2.96 4.06-3.83.133-.076.268-.148.405-.216C22.638 4.2 22.953 1.373 21.678.52z"/></svg>` },
+      'duckdb':    { label:'DuckDB',    color:'#ffcc00', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="12" fill="#1a1400"/><circle cx="12" cy="12" r="8" fill="#ffcc00" opacity="0.15" stroke="#ffcc00" stroke-width="1.5"/><circle cx="9.5" cy="12" r="3" fill="#ffcc00"/><circle cx="14.5" cy="12" r="3" fill="#1a1400" stroke="#ffcc00" stroke-width="1.5"/></svg>` },
+      'apache airflow': { label:'Airflow', color:'#017cee', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#00101f"/><circle cx="5" cy="12" r="2" fill="#017cee"/><circle cx="12" cy="6" r="2" fill="#017cee"/><circle cx="12" cy="18" r="2" fill="#017cee"/><circle cx="19" cy="12" r="2" fill="#017cee"/><path d="M7 11.3l3.5-4M7 12.7l3.5 4M14 7l3.5 4M14 17l3.5-4" stroke="#017cee" stroke-width="1.3" stroke-linecap="round"/></svg>` },
+      'apache iceberg': { label:'Iceberg', color:'#5ea7d4', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#071a2b"/><polygon points="12,3 21,18 3,18" fill="none" stroke="#5ea7d4" stroke-width="1.5"/><polygon points="12,9 17,18 7,18" fill="#5ea7d4" opacity="0.4"/></svg>` },
+      'datahub oss': { label:'DataHub', color:'#09b7a5', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#041c1a"/><circle cx="12" cy="7" r="2.5" fill="#09b7a5"/><circle cx="5" cy="17" r="2.5" fill="#09b7a5"/><circle cx="19" cy="17" r="2.5" fill="#09b7a5"/><path d="M12 9.5v3M12 12.5l-5 3M12 12.5l5 3" stroke="#09b7a5" stroke-width="1.5" stroke-linecap="round"/></svg>` },
+      'soda core': { label:'Soda Core', color:'#ff6d4a', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1a0a06"/><path d="M12 4c-4.4 0-8 2.7-8 6 0 2 1.3 3.7 3.3 4.8L6 20h12l-1.3-5.2C18.7 13.7 20 12 20 10c0-3.3-3.6-6-8-6z" fill="#ff6d4a" opacity="0.3" stroke="#ff6d4a" stroke-width="1.5"/><path d="M9 10.5s1 1.5 3 1.5 3-1.5 3-1.5" stroke="#ff6d4a" stroke-width="1.5" stroke-linecap="round"/></svg>` },
+      'minio':     { label:'MinIO',     color:'#c72e49', svg:`<svg viewBox="0 0 24 24" fill="#c72e49"><path d="M7.286 0v24l4.357-4.364V4.355L7.286 0zm9.428 0l-4.357 4.355v15.281L16.714 24V0z"/></svg>` },
+      'gmail api': { label:'Gmail API', color:'#ea4335', svg:`<svg viewBox="0 0 24 24"><path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>` },
+      'node.js':   { label:'Node.js',   color:'#339933', svg:`<svg viewBox="0 0 24 24" fill="#339933"><path d="M11.998 24a2.1 2.1 0 0 1-1.05-.277l-3.33-1.974c-.499-.279-.255-.378-.09-.435.663-.231.796-.283 1.502-.684.074-.042.171-.026.247.018l2.558 1.518c.094.051.227.051.312 0l9.964-5.75c.094-.055.154-.165.154-.277V6.862c0-.116-.06-.22-.156-.283l-9.961-5.74a.271.271 0 0 0-.31 0L2.831 6.581a.328.328 0 0 0-.158.282v11.497c0 .114.061.219.154.274l2.731 1.576c1.482.74 2.391-.132 2.391-.999V7.697c0-.16.124-.286.285-.286h1.24c.158 0 .285.125.285.286v11.514c0 1.953-1.064 3.073-2.916 3.073-.569 0-1.018 0-2.269-.617L1.484 19.99A2.107 2.107 0 0 1 .436 18.17V6.673A2.1 2.1 0 0 1 1.484 4.85l9.964-5.752a2.188 2.188 0 0 1 2.107 0L23.519 4.85a2.107 2.107 0 0 1 1.048 1.823v11.497a2.11 2.11 0 0 1-1.048 1.823l-9.964 5.751A2.098 2.098 0 0 1 11.998 24z"/></svg>` },
+      'postgresql':{ label:'PostgreSQL',color:'#336791', svg:`<svg viewBox="0 0 24 24" fill="#336791"><path d="M17.128 0a10.134 10.134 0 0 0-2.755.403l-.063.02A10.922 10.922 0 0 0 12.6.258C11.422.238 10.41.524 9.594 1 8.58.721 7.122.24 5.364.336 4.14.403 2.804.775 1.814 1.79.827 2.797.265 4.318.324 6.388c.03 1.058.374 2.22.739 3.033l.025.055-.015.05C.599 11.888 1.372 16.07 3.627 18.625c1.424 1.61 3.534 2.39 5.426 2.072.757.374 1.723.673 3.03.698 1.573.028 2.879-.481 3.773-1.233 1.09.253 2.244.123 3.294-.405 2.755-1.399 4.56-5.185 4.437-10.152a18.166 18.166 0 0 0-.053-1.138l.02-.021c.63-.682 1.081-1.476 1.138-2.286.085-1.18-.465-2.26-1.733-2.86zM6.025 20.18c-1.593.271-3.388-.382-4.636-1.791C-.103 16.36-.71 12.716.581 10.2c.148.894.37 1.742.61 2.464l.003.01c.44 1.324 1.075 2.293 1.994 2.87.387.245.773.41 1.145.497a5.948 5.948 0 0 0 1.293.06c.234.38.513.74.84 1.058.517.498 1.122.885 1.761 1.07-.89.395-1.49.78-2.202.95z"/></svg>` },
+      'capacitor': { label:'Capacitor', color:'#53b9ff', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#001f3f"/><path d="M5 12h4M15 12h4M10 7l-2 5 2 5M14 7l2 5-2 5" stroke="#53b9ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
+      'gemini ai': { label:'Gemini AI', color:'#8ab4f8', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#0a1628"/><path d="M12 3c0 5 3 8 9 9-6 1-9 4-9 9-0-5-3-8-9-9 6-1 9-4 9-9z" fill="#8ab4f8"/></svg>` },
+      'ai research':{ label:'AI Research',color:'#aa44ff', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#150a28"/><circle cx="12" cy="10" r="4" stroke="#aa44ff" stroke-width="1.5"/><path d="M15 13.5l3.5 3.5" stroke="#aa44ff" stroke-width="1.8" stroke-linecap="round"/><path d="M12 6V4M8 7.5L6.5 6M16 7.5L17.5 6" stroke="#aa44ff" stroke-width="1.5" stroke-linecap="round"/></svg>` },
+      'jws es256': { label:'JWS ES256', color:'#f5a623', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1a1000"/><rect x="5" y="11" width="14" height="9" rx="2" stroke="#f5a623" stroke-width="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="15.5" r="1.5" fill="#f5a623"/></svg>` },
+    };
+
+    const techItems = JSON.parse(d.tech || '[]');
+    modal.querySelector('.sol-pills').innerHTML = techItems.map(t => {
+      const key = t.toLowerCase();
+      const meta = TECH[key] || null;
+      const color = meta ? meta.color : '#7a9faf';
+      const label = meta ? meta.label : t;
+      const svgIcon = meta ? meta.svg : `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="${color}22"/><text x="12" y="17" text-anchor="middle" font-size="11" font-family="monospace" fill="${color}">${label.charAt(0)}</text></svg>`;
+      return `<div class="proj-modal-pill">
+        ${svgIcon}
+        <span style="color:${color}">${label}</span>
+      </div>`;
+    }).join('');
+
+    // Reset to slide 0
+    allSlides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    curSlide = 0;
+    allSlides[0].classList.add('active');
+    dots[0].classList.add('active');
+    prevBtn.disabled = true;
+    nextBtn.textContent = 'The Build →';
+
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  nextBtn.addEventListener('click', () => { curSlide === 0 ? goToSlide(1) : closeModal(); });
+  prevBtn.addEventListener('click', () => { if (curSlide === 1) goToSlide(0); });
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => {
+    if (!modal.classList.contains('open')) return;
+    if (e.key === 'Escape')     closeModal();
+    if (e.key === 'ArrowRight' && curSlide === 0) goToSlide(1);
+    if (e.key === 'ArrowLeft'  && curSlide === 1) goToSlide(0);
+  });
+
+  document.querySelectorAll('.prow').forEach(row => {
+    row.addEventListener('click', () => openFromRow(row));
+  });
+
+  /* ── AVATAR PHOTO LOADER ──
+     To use your real LinkedIn photo:
+     1. Go to your LinkedIn profile
+     2. Right-click your profile photo → "Copy image address"
+     3. Replace the URL below with that address
+     Or set PHOTO_URL to any direct image URL.
+  ── */
+  const PHOTO_URL = ''; // ← paste your photo URL here
+
+  if (PHOTO_URL) {
+    const avatarWrap = document.getElementById('profile-avatar');
+    const img = document.createElement('img');
+    img.src = PHOTO_URL;
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;';
+    img.onload = () => {
+      document.getElementById('avatar-fallback').style.display = 'none';
+      avatarWrap.appendChild(img);
+    };
+  }
+</script>
+</body>
+</html>
