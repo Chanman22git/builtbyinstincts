@@ -1131,11 +1131,11 @@
     gap: 16px; margin-top: 36px;
   }
   .tile { grid-column: span 2; }
-  .tile.featured { grid-column: span 3; grid-row: span 2; }
+  .tile.featured { grid-column: 1 / -1; grid-row: auto; }
   @media (max-width: 1080px) {
     .grid { grid-template-columns: repeat(4, 1fr); }
     .tile { grid-column: span 2; }
-    .tile.featured { grid-column: span 4; grid-row: span 1; }
+    .tile.featured { grid-column: 1 / -1; grid-row: auto; }
   }
   @media (max-width: 720px) {
     .grid { grid-template-columns: 1fr; }
@@ -1216,6 +1216,9 @@
     position: relative; z-index: 2; max-width: 42ch;
   }
   .tile.featured .tile-liner { font-size: 1.12rem; margin-top: 18px; }
+  /* full-width featured card: keep text readable, don't stretch edge-to-edge */
+  .tile.featured .tile-liner,
+  .tile.featured .tile-hl { max-width: 60ch; }
 
   /* high-level business-impact stat on each card */
   .tile-impact {
