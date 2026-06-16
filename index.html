@@ -16,10 +16,26 @@
     --orange: #ff6b2b;
     --orange-dim: #b84a1e;
     --white: #e8f4f8;
-    --muted: #4a7a8a;
+    --muted: #7099a8;
     --border: rgba(0,245,255,0.12);
     --glow-cyan: 0 0 20px rgba(0,245,255,0.4), 0 0 60px rgba(0,245,255,0.1);
     --glow-orange: 0 0 20px rgba(255,107,43,0.5), 0 0 60px rgba(255,107,43,0.15);
+    /* ── aliases so the merged Projects grid styles resolve ── */
+    --surface-2: #0c1f30;
+    --border-soft: rgba(255,255,255,0.05);
+    --border-strong: rgba(0,245,255,0.30);
+    --text: #e8f4f8;
+    --text-muted: var(--muted);
+    --text-soft: #7a9faf;
+    --font-display: 'Orbitron', monospace;
+    --font-body: 'Rajdhani', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --glow-text: 0 0 20px rgba(0,245,255,0.40);
+    --shadow-panel: 0 24px 80px rgba(0,0,0,0.55);
+    --grid-size: 60px;
+    --overlay-grid: linear-gradient(rgba(0,245,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,245,255,0.025) 1px, transparent 1px);
+    --overlay-scanline: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.035) 2px, rgba(0,0,0,0.035) 4px);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,7 +52,6 @@
     font-family: 'Rajdhani', sans-serif;
     font-weight: 400;
     overflow: visible;
-    cursor: none;
     min-height: 100%;
   }
 
@@ -112,8 +127,6 @@
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     text-align: center; padding: 0 20px; overflow: hidden;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
   .orbit-container {
     position: absolute; top: 50%; left: 50%;
@@ -170,10 +183,9 @@
     background: linear-gradient(90deg, var(--cyan), var(--orange));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
-  .hero-title .line2::before { animation: glitch1 5s infinite; clip-path: polygon(0 0,100% 0,100% 38%,0 38%); transform:translate(-3px,0); }
-  .hero-title .line2::after  { animation: glitch2 5s infinite; clip-path: polygon(0 62%,100% 62%,100% 100%,0 100%); transform:translate(3px,0); }
-  @keyframes glitch1 { 0%,88%,100%{opacity:0} 90%{opacity:1;transform:translate(-5px,-2px)} 93%{opacity:1;transform:translate(3px,0)} 95%{opacity:0} }
-  @keyframes glitch2 { 0%,88%,100%{opacity:0} 91%{opacity:1;transform:translate(5px,2px)} 94%{opacity:1;transform:translate(-3px,0)} 96%{opacity:0} }
+  /* glitch removed for a calmer, recruiter-facing read — keep the clean gradient wordmark */
+  .hero-title .line2::before,
+  .hero-title .line2::after { display: none; }
 
   .hero-sub {
     margin-top: 28px; font-size: 1.1rem; font-weight: 300;
@@ -186,7 +198,7 @@
     font-family: 'Share Tech Mono', monospace; font-size: 0.68rem;
     letter-spacing: 0.2em; text-transform: uppercase;
     padding: 14px 36px; text-decoration: none;
-    position: relative; overflow: hidden; transition: all 0.3s; cursor: none;
+    position: relative; overflow: hidden; transition: all 0.3s; cursor: pointer;
   }
   .btn-primary { background: transparent; color: var(--cyan); border: 1px solid var(--cyan); box-shadow: var(--glow-cyan); }
   .btn-primary::before { content: ''; position: absolute; inset: 0; background: var(--cyan); transform: translateX(-100%); transition: transform 0.3s; z-index: -1; }
@@ -238,15 +250,13 @@
      PROJECTS — 2×2 CARD GRID
   ══════════════════════════════════════ */
   #projects {
-    padding: 0 60px 48px;
-    min-height: 100vh;
+    padding: 96px 0 110px;
+    min-height: auto;
     height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+    display: block;
   }
+  .proj-wrap { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+  @media (max-width: 720px) { .proj-wrap { padding: 0 22px; } }
 
   .projects-header {
     text-align: center;
@@ -268,7 +278,7 @@
   /* ── card ── */
   .prow {
     position: relative;
-    cursor: none;
+    cursor: pointer;
     background: var(--surface);
     border: 1px solid rgba(255,255,255,0.05);
     padding: 28px 28px 22px;
@@ -438,7 +448,7 @@
     background: rgba(2,7,12,0.85);
     backdrop-filter: blur(24px) saturate(0.4);
     -webkit-backdrop-filter: blur(24px) saturate(0.4);
-    cursor: none;
+    cursor: pointer;
   }
 
   .proj-modal-card {
@@ -611,7 +621,7 @@
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.52rem; letter-spacing: 0.38em; text-transform: uppercase;
     color: rgba(255,255,255,0.15); background: none; border: none;
-    cursor: none; transition: color 0.25s; padding: 0;
+    cursor: pointer; transition: color 0.25s; padding: 0;
   }
   .proj-modal-close:hover { color: rgba(255,255,255,0.45); }
 
@@ -622,7 +632,7 @@
     width: 18px; height: 2px;
     background: rgba(255,255,255,0.08);
     transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
-    cursor: none;
+    cursor: pointer;
   }
   .proj-modal-dot.active {
     width: 40px;
@@ -634,7 +644,7 @@
   .proj-modal-btn {
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
-    background: transparent; cursor: none;
+    background: transparent; cursor: pointer;
     padding: 11px 28px;
     position: relative;
     border: none; outline: none;
@@ -890,8 +900,6 @@
     height: 100vh;
     min-height: 600px;
     display: flex; align-items: center;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
   .about-inner {
     max-width: 1200px; margin: 0 auto;
@@ -951,8 +959,6 @@
     height: 100vh;
     min-height: 600px;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
   .contact-inner { max-width: 800px; margin: 0 auto; text-align: center; }
   .contact-subtitle { font-size: 1.05rem; color: var(--muted); margin: 20px 0 56px; line-height: 1.75; }
@@ -1076,13 +1082,418 @@
     .orbit-2 { width: 240px; height: 240px; }
     .orbit-1 { width: 140px; height: 140px; }
   }
+  /* ═══════════════════════════════════════════════════════════
+     MERGED PROJECTS REDESIGN — bento grid + iPhone + overlay
+  ═══════════════════════════════════════════════════════════ */
+  .head { margin-bottom: 40px; }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.66rem; letter-spacing: 0.4em;
+    color: var(--orange); text-transform: uppercase;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--orange); }
+  .head-row {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px; margin-top: 16px;
+  }
+  .head-title {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(2rem, 4.5vw, 3.4rem); letter-spacing: 0.02em;
+    line-height: 1.02;
+  }
+  .head-title b { color: var(--cyan); font-weight: 800; text-shadow: var(--glow-text); }
+  .head-meta {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.2em;
+    color: var(--text-muted); text-transform: uppercase; text-align: right;
+    line-height: 1.9;
+  }
+  .head-meta b { color: var(--cyan); }
+  .head-meta div:last-child { color: var(--cyan); opacity: 0.85; }
+
+  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 30px; }
+  .filter {
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-muted);
+    background: transparent; border: 1px solid var(--border-soft);
+    padding: 9px 18px; cursor: pointer;
+    transition: color .25s, border-color .25s, background .25s;
+  }
+  .filter:hover { color: var(--text); border-color: var(--border-strong); }
+  .filter.active {
+    color: var(--bg); background: var(--cyan);
+    border-color: var(--cyan); box-shadow: var(--glow-cyan);
+  }
+  .filter .count { opacity: 0.55; margin-left: 7px; }
+
+  .grid {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 16px; margin-top: 36px;
+  }
+  .tile { grid-column: span 2; }
+  .tile.featured { grid-column: span 3; grid-row: span 2; }
+  @media (max-width: 1080px) {
+    .grid { grid-template-columns: repeat(4, 1fr); }
+    .tile { grid-column: span 2; }
+    .tile.featured { grid-column: span 4; grid-row: span 1; }
+  }
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: 1fr; }
+    .tile, .tile.featured { grid-column: span 1; grid-row: auto; }
+  }
+
+  .tile {
+    --tacc: #00f5ff;
+    position: relative; overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    padding: 26px 26px 22px;
+    display: flex; flex-direction: column;
+    min-height: 230px; cursor: pointer;
+    transition: transform .5s var(--ease-out-expo), border-color .4s, background .4s;
+  }
+  .tile.featured { min-height: 476px; padding: 34px 34px 28px; }
+  @media (max-width: 1080px) { .tile.featured { min-height: 430px; } }
+  @media (max-width: 720px) { .tile.featured { min-height: 250px; } }
+  .tile:hover {
+    background: var(--surface-2);
+    border-color: color-mix(in srgb, var(--tacc) 38%, transparent);
+    transform: translateY(-4px);
+  }
+  .tile::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--tacc); transform: scaleX(0); transform-origin: left;
+    transition: transform .55s var(--ease-out-expo);
+    box-shadow: 0 0 14px var(--tacc); z-index: 3;
+  }
+  .tile:hover::before { transform: scaleX(1); }
+  .tile-bloom {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0;
+    background: radial-gradient(ellipse 70% 70% at 85% 12%,
+      color-mix(in srgb, var(--tacc) 16%, transparent), transparent 70%);
+    transition: opacity .5s ease;
+  }
+  .tile:hover .tile-bloom { opacity: 1; }
+  .tile-num {
+    position: absolute; top: 10px; right: 14px;
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 3.4rem; line-height: 1; color: var(--tacc);
+    opacity: 0.07; transition: opacity .3s; pointer-events: none; z-index: 1;
+  }
+  .tile.featured .tile-num { font-size: 5.5rem; top: 8px; left: 24px; right: auto; }
+  .tile:hover .tile-num { opacity: 0.14; }
+  .tile-top { display: flex; align-items: center; gap: 12px; position: relative; z-index: 2; }
+  .tile-logo {
+    width: 46px; height: 46px; border-radius: 11px; display: block;
+    flex-shrink: 0; box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 6px 18px rgba(0,0,0,0.45);
+  }
+  .status {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-size: 0.54rem; letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .status .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--st); box-shadow: 0 0 8px var(--st);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+  .tile-name {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 1.3rem; letter-spacing: 0.02em; color: var(--text);
+    margin-top: 18px; position: relative; z-index: 2; transition: color .3s;
+  }
+  .tile.featured .tile-name { font-size: 2.1rem; margin-top: 26px; }
+  .tile:hover .tile-name { color: var(--tacc); }
+  .tile-domain {
+    font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.16em;
+    color: var(--text-muted); text-transform: uppercase; margin-top: 9px;
+    position: relative; z-index: 2;
+  }
+  .tile-liner {
+    font-family: var(--font-body); font-weight: 300; font-size: 0.94rem;
+    line-height: 1.55; color: var(--text-soft); margin-top: 14px;
+    position: relative; z-index: 2; max-width: 42ch;
+  }
+  .tile.featured .tile-liner { font-size: 1.12rem; margin-top: 18px; }
+
+  /* high-level business-impact stat on each card */
+  .tile-impact {
+    display: flex; align-items: baseline; gap: 13px; margin-top: 18px;
+    position: relative; z-index: 2;
+  }
+  .impact-stat {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 1.85rem; line-height: 0.95; color: var(--tacc); flex-shrink: 0;
+    text-shadow: 0 0 18px color-mix(in srgb, var(--tacc) 38%, transparent);
+    letter-spacing: 0.01em;
+  }
+  .impact-line {
+    font-family: var(--font-body); font-weight: 300; font-size: 0.9rem;
+    line-height: 1.4; color: var(--text-soft); text-wrap: pretty;
+  }
+  .tile.featured .tile-impact { margin-top: 22px; gap: 16px; }
+  .tile.featured .impact-stat { font-size: 2.5rem; }
+  .tile.featured .impact-line { font-size: 1rem; max-width: 34ch; }
+  .tile-split { display: flex; gap: 30px; flex: 1; align-items: stretch; min-height: 0; }
+  .tile-body { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .tile-phone {
+    flex-shrink: 0; align-self: center;
+    display: flex; flex-direction: column; align-items: center; gap: 11px;
+  }
+  .iphone {
+    position: relative; height: 384px; aspect-ratio: 256 / 590;
+    background: linear-gradient(150deg, #232a33, #0a0d11);
+    border-radius: 26px; padding: 5px;
+    box-shadow: 0 0 0 1.5px rgba(255,255,255,0.08), 0 26px 55px rgba(0,0,0,0.6);
+  }
+  .iphone-screen {
+    position: relative; width: 100%; height: 100%;
+    border-radius: 19px; overflow: hidden; background: #0a0a0d;
+    display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    cursor: grab; touch-action: pan-y;
+  }
+  .iphone-screen.dragging { cursor: grabbing; scroll-snap-type: none; }
+  .iphone-screen::-webkit-scrollbar { display: none; }
+  .iphone-shot { flex: 0 0 100%; height: 100%; scroll-snap-align: center; }
+  .iphone-shot img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    -webkit-user-drag: none; user-select: none; pointer-events: none;
+  }
+  .phone-nav { display: flex; gap: 8px; align-items: center; padding: 5px 2px; }
+  .phone-nav i {
+    width: 7px; height: 7px; border-radius: 50%; cursor: pointer;
+    background: rgba(255,255,255,0.28); transition: all .3s var(--ease-out-expo);
+  }
+  .phone-nav i:hover { background: rgba(255,255,255,0.55); }
+  .phone-nav i.on { background: var(--tacc); width: 18px; border-radius: 3px; box-shadow: 0 0 8px var(--tacc); }
+  .phone-nav i.on:hover { background: var(--tacc); }
+  @media (max-width: 1080px) { .tile-phone .iphone { height: 360px; } }
+  @media (max-width: 720px) { .tile-phone { display: none; } }
+  .tile-hl { list-style: none; margin-top: 22px; position: relative; z-index: 2; }
+  .tile-hl li {
+    font-family: var(--font-body); font-size: 0.96rem; font-weight: 300;
+    color: var(--text-soft); line-height: 1.4; padding: 7px 0;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .tile-hl li::before { content: '▸'; color: var(--tacc); font-size: 0.55rem; margin-top: 6px; flex-shrink: 0; }
+  .tile-signal {
+    height: 1px; margin: 18px 0 0; position: relative; z-index: 2;
+    background: linear-gradient(90deg, var(--tacc), transparent 60%); opacity: 0.35;
+  }
+  .tile-signal::after {
+    content: ''; position: absolute; top: -1px; left: 0; width: 22px; height: 3px;
+    background: var(--tacc); box-shadow: 0 0 10px var(--tacc);
+    animation: sweep 3.5s var(--ease-out-expo) infinite;
+  }
+  @keyframes sweep { 0%{left:0;opacity:0} 12%{opacity:1} 60%{left:60%;opacity:0} 100%{left:60%;opacity:0} }
+  .tile-foot {
+    margin-top: auto; display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 12px; padding-top: 18px; position: relative; z-index: 2;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .chip {
+    font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--text-muted);
+    border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.03);
+    padding: 4px 8px; white-space: nowrap; transition: color .25s, border-color .25s;
+  }
+  .tile:hover .chip { border-color: color-mix(in srgb, var(--tacc) 20%, transparent); }
+  .chip.more { color: var(--tacc); border-color: color-mix(in srgb, var(--tacc) 28%, transparent); }
+  .tile-cta {
+    font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.18em;
+    color: var(--tacc); text-transform: uppercase; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 7px; align-self: flex-end;
+    border: 1px solid color-mix(in srgb, var(--tacc) 34%, transparent);
+    padding: 8px 13px; transition: background .25s, box-shadow .25s, border-color .25s;
+  }
+  .tile-cta .arrow { transition: transform .3s var(--ease-out-expo); }
+  .tile:hover .tile-cta {
+    background: color-mix(in srgb, var(--tacc) 12%, transparent);
+    border-color: color-mix(in srgb, var(--tacc) 60%, transparent);
+    box-shadow: 0 0 16px color-mix(in srgb, var(--tacc) 22%, transparent);
+  }
+  .tile:hover .tile-cta .arrow { transform: translateX(3px); }
+
+  .ov {
+    position: fixed; inset: 0; z-index: 800;
+    display: flex; align-items: center; justify-content: center;
+    padding: 28px; opacity: 0; pointer-events: none;
+    transition: opacity .45s var(--ease-out-expo);
+  }
+  .ov.open { opacity: 1; pointer-events: auto; }
+  .ov-backdrop {
+    position: absolute; inset: 0; background: rgba(2,7,12,0.86);
+    backdrop-filter: blur(22px) saturate(0.5);
+    -webkit-backdrop-filter: blur(22px) saturate(0.5);
+  }
+  .ov-card {
+    --tacc: #00f5ff; position: relative; z-index: 1;
+    width: 100%; max-width: 1040px; height: min(86vh, 760px);
+    background: rgba(4,12,20,0.98); border: 1px solid rgba(255,255,255,0.08);
+    display: flex; flex-direction: column; box-shadow: var(--shadow-panel);
+    transform: translateY(36px) scale(0.975);
+    transition: transform .55s var(--ease-out-expo); overflow: hidden;
+  }
+  .ov.open .ov-card { transform: none; }
+  .ov-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--tacc); box-shadow: 0 0 28px var(--tacc); z-index: 5;
+  }
+  .ov-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 36px; border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;
+  }
+  .ov-id { display: flex; align-items: center; gap: 16px; }
+  .ov-idnum { font-family: var(--font-display); font-weight: 900; font-size: 1.1rem; color: var(--tacc); opacity: 0.5; }
+  .ov-name { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; letter-spacing: 0.03em; color: var(--text); }
+  .ov-head-actions { display: flex; align-items: center; gap: 14px; }
+  .ov-close {
+    font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--text-muted);
+    background: none; border: 1px solid var(--border-soft); padding: 11px 14px;
+    cursor: pointer; transition: color .25s, border-color .25s; white-space: nowrap;
+  }
+  .ov-close:hover { color: var(--text); border-color: var(--border-strong); }
+  .ov-view { position: relative; flex: 1; overflow: hidden; }
+  .slide {
+    position: absolute; inset: 0; overflow-y: auto; padding: 44px 56px 40px;
+    opacity: 0; transform: translateY(18px); pointer-events: none; visibility: hidden;
+    transition: opacity .5s var(--ease-out-expo), transform .5s var(--ease-out-expo);
+  }
+  .slide.active { opacity: 1; transform: none; pointer-events: auto; visibility: visible; }
+  .slide::-webkit-scrollbar { width: 8px; }
+  .slide::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); }
+  .s-eyebrow {
+    font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.36em;
+    text-transform: uppercase; color: var(--tacc); opacity: 0.8;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 22px;
+  }
+  .s-eyebrow::before { content: ''; width: 20px; height: 1px; background: currentColor; }
+  .s-headline {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(1.4rem, 2.6vw, 2rem); letter-spacing: 0.02em;
+    line-height: 1.22; color: var(--text); margin-bottom: 16px;
+  }
+  .s-lead {
+    font-family: var(--font-body); font-weight: 300; font-size: 1.08rem;
+    line-height: 1.72; color: #b8d4de; margin-bottom: 26px; max-width: 64ch;
+  }
+  .s-lead strong { color: var(--text); font-weight: 600; }
+  .s0-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 44px; align-items: start; }
+  .s0-aside { position: sticky; top: 0; border-left: 1px solid rgba(255,255,255,0.07); padding-left: 30px; }
+  @media (max-width: 820px) {
+    .s0-grid { grid-template-columns: 1fr; gap: 28px; }
+    .s0-aside { border-left: none; padding-left: 0; position: static; }
+  }
+  .benefit {
+    border-left: 2px solid var(--tacc);
+    background: color-mix(in srgb, var(--tacc) 5%, transparent);
+    padding: 16px 22px; margin-bottom: 4px;
+  }
+  .benefit .lbl {
+    font-family: var(--font-mono); font-size: 0.52rem; letter-spacing: 0.32em;
+    text-transform: uppercase; color: var(--tacc); margin-bottom: 9px; display: block;
+  }
+  .benefit p { font-family: var(--font-body); font-size: 1.04rem; line-height: 1.6; color: var(--text); font-weight: 400; }
+  .s-sublabel {
+    font-family: var(--font-mono); font-size: 0.54rem; letter-spacing: 0.34em;
+    text-transform: uppercase; color: rgba(255,255,255,0.28);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+  }
+  .s-sublabel::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
+  .market { display: grid; grid-template-columns: 1fr; gap: 2px; margin-bottom: 14px; }
+  .market .cell { background: rgba(255,255,255,0.025); padding: 20px 18px; }
+  .market .big {
+    font-family: var(--font-display); font-weight: 900; font-size: 1.7rem;
+    color: var(--tacc); text-shadow: 0 0 18px color-mix(in srgb, var(--tacc) 45%, transparent);
+    display: block; line-height: 1;
+  }
+  .market .cap { font-family: var(--font-body); font-size: 0.84rem; color: var(--text-soft); margin-top: 10px; line-height: 1.45; font-weight: 300; }
+  @media (max-width: 620px) { .market .big { font-size: 1.5rem; } }
+  .arch { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0; margin-bottom: 32px; }
+  .arch .node {
+    position: relative; display: flex; align-items: center;
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--text);
+    border: 1px solid color-mix(in srgb, var(--tacc) 30%, transparent);
+    background: color-mix(in srgb, var(--tacc) 6%, transparent);
+    padding: 12px 16px; margin: 0 26px 14px 0;
+  }
+  .arch .node::after {
+    content: '→'; position: absolute; right: -22px; top: 50%; transform: translateY(-50%);
+    color: var(--tacc); font-size: 0.9rem; opacity: 0.7;
+  }
+  .arch .node:last-child::after { display: none; }
+  .hl { list-style: none; margin-bottom: 30px; }
+  .hl li {
+    font-family: var(--font-body); font-size: 1rem; font-weight: 400;
+    color: #9abfcc; padding: 11px 0; line-height: 1.5;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .hl li::before { content: '▸'; color: var(--tacc); font-size: 0.6rem; margin-top: 6px; flex-shrink: 0; }
+  .stack { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 32px; }
+  .stack .pill {
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #b8d4de;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+    padding: 9px 14px 9px 10px; display: inline-flex; align-items: center; gap: 9px;
+    transition: border-color .25s, background .25s;
+  }
+  .stack .pill:hover {
+    border-color: color-mix(in srgb, var(--tacc) 32%, transparent);
+    background: color-mix(in srgb, var(--tacc) 6%, transparent);
+  }
+  .stack .pill svg { width: 16px; height: 16px; flex-shrink: 0; display: block; }
+  .links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .lnk {
+    font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.16em;
+    text-transform: uppercase; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 16px; transition: color .3s, background .3s, box-shadow .3s; white-space: nowrap;
+  }
+  .lnk svg { width: 14px; height: 14px; }
+  .lnk-ui { color: var(--bg); background: var(--tacc); box-shadow: 0 0 20px color-mix(in srgb, var(--tacc) 40%, transparent); }
+  .lnk-ui:hover { box-shadow: 0 0 28px color-mix(in srgb, var(--tacc) 60%, transparent); }
+  .lnk-repo { color: var(--text); background: transparent; border: 1px solid var(--border-strong); }
+  .lnk-repo:hover { background: rgba(255,255,255,0.05); border-color: var(--tacc); color: var(--tacc); }
+  .lnk[data-dummy="1"]::after {
+    content: 'demo'; font-size: 0.5rem; letter-spacing: 0.1em; opacity: 0.6;
+    border: 1px solid currentColor; padding: 1px 4px; margin-left: 4px;
+  }
+  .ov-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 36px; border-top: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;
+  }
+  .dots { display: flex; gap: 8px; align-items: center; }
+  .dot-nav { width: 18px; height: 2px; background: rgba(255,255,255,0.1); cursor: pointer; transition: all .4s var(--ease-out-expo); }
+  .dot-nav.active { width: 40px; background: var(--tacc); box-shadow: 0 0 10px var(--tacc); }
+  .nav-btns { display: flex; gap: 12px; }
+  .nav-btn {
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.22em;
+    text-transform: uppercase; background: transparent; cursor: pointer;
+    padding: 11px 24px; position: relative; border: none; color: var(--tacc);
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    box-shadow: inset 0 0 0 1px var(--tacc); transition: color .3s, background .3s;
+  }
+  .nav-btn:hover { color: var(--bg); background: var(--tacc); }
+  .nav-btn.ghost { color: var(--text-muted); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18); }
+  .nav-btn.ghost:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+  .nav-btn[disabled] { opacity: 0.25; pointer-events: none; }
+  .ov-slidelabel { font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.26em; color: var(--text-muted); text-transform: uppercase; }
+  @media (max-width: 620px) {
+    .slide { padding: 32px 24px; }
+    .ov-head, .ov-foot { padding: 16px 20px; }
+    .ov { padding: 0; }
+    .ov-card { height: 100vh; max-width: none; }
+  }
 </style>
 </head>
 <body>
 
 <div id="hero-intro-cover"></div>
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
 <div class="grid-bg"></div>
 
 <!-- NAV -->
@@ -1120,292 +1531,79 @@
 
 <!-- ═══════════════ PROJECTS ═══════════════ -->
 <section id="projects">
-  <div class="projects-header reveal">
-    <span class="section-tag">// product portfolio</span>
-    <h2 class="section-title">Selected <span>Projects</span></h2>
-  </div>
-
-  <div class="projects-list">
-
-    <!-- 01 · MyPAIT -->
-    <div class="prow reveal" style="--acc:#00f5ff;"
-      data-acc="#00f5ff"
-      data-num="01"
-      data-name="MyPAIT"
-      data-tag="iOS &amp; Android · AI · Fitness"
-      data-status="LIVE"
-      data-status-color="#00ff88"
-      data-problem-headline="The gym that was never built for you"
-      data-problem="You sign up, you show up, and then you stare at a screen full of exercises designed for someone else. Generic plans ignore your equipment, your schedule, your injuries, your goals. Fitness apps tell you what to do — none of them know who you are. So you either grind through something that doesn't fit, or you quit. Most people quit."
-      data-solution="An intelligent fitness companion that uses AI to generate personalized workout plans tailored to your exact profile — goals, equipment, schedule, and health data. You chat, it builds. Then it coaches you through every rep. Ships on both platforms — the iOS app via React + Capacitor, plus a fully native Android build in Kotlin &amp; Jetpack Compose against the same Supabase backend."
-      data-features='["Conversational onboarding that maps your full fitness profile","Dynamic workout splits via Gemini AI","Live session guidance with form cues &amp; exercise swaps","Progress tracking — streaks, volume &amp; personal bests","Available on iOS and Android — native Kotlin/Compose port at full parity"]'
-      data-tech='["React / Vite","Supabase","Gemini AI","Capacitor","Kotlin","Jetpack Compose"]'>
-      <div class="prow-bar"></div>
-      <div class="prow-bg"></div>
-      <div class="prow-head">
-        <span class="prow-num">01</span>
-        <h3 class="prow-name">MyPAIT</h3>
-        <span class="prow-spacer"></span>
-        <span class="prow-liner">Your gym in your pocket — built around you, on iOS &amp; Android.</span>
-        <span class="prow-arrow">[ VIEW ]</span>
+  <div class="proj-wrap">
+    <header class="head">
+      <span class="eyebrow">Product Portfolio</span>
+      <div class="head-row">
+        <h2 class="head-title">Selected <b>Projects</b></h2>
+        <div class="head-meta">
+          <div><b id="m-count">7</b> shipped &amp; in-flight</div>
+          <div>Click any card to explore →</div>
+        </div>
       </div>
-      <div class="prow-tags">
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#61dafb"><path d="M12 10.11A1.87 1.87 0 1 1 10.13 12 1.86 1.86 0 0 1 12 10.11M7.37 20c.63.38 2-.2 3.6-1.7a24.22 24.22 0 0 1-1.51-1.9A22.7 22.7 0 0 1 7.06 16c-.51 2.14-.32 3.61.31 4m.71-5.74-.07-.07c-.36.77-.72 1.6-1 2.44A15.56 15.56 0 0 0 9 18.1 16 16 0 0 0 10 16.8a17.65 17.65 0 0 1-1.89-2.55m7.44 5.74c.63-.39.84-1.86.33-4a22.1 22.1 0 0 1-2.4.36 24.65 24.65 0 0 1-1.51 1.9c1.58 1.48 3 2.07 3.58 1.7M12 6.07A18.57 18.57 0 0 0 10 7.87c.65 0 1.32.07 2 .07s1.35 0 2-.07A18.57 18.57 0 0 0 12 6.07M7.37 4c-.63.39-.84 1.86-.33 4a22.1 22.1 0 0 1 2.4-.36 24.65 24.65 0 0 1 1.51-1.9C9.37 4.26 8 3.67 7.37 4m7.27 0C14 3.67 12.59 4.26 11 5.74a24.22 24.22 0 0 1 1.51 1.9 22.7 22.7 0 0 1 2.4.36c.51-2.14.32-3.61-.27-4M16.62 16c-.44.78-.89 1.48-1.38 2.1a15.56 15.56 0 0 0 2-.36A16.5 16.5 0 0 0 16.62 16m-.71-5.74A16 16 0 0 0 15 8.2a16 16 0 0 0-1-.86 17.65 17.65 0 0 1-1.89 2.55l-.07.07c.65.1 1.3.24 1.93.42z"/></svg><span>React / Vite</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1b0a2e"/><path d="M5 5h14L12 12l7 7H5z" fill="#a97bff"/></svg><span>Kotlin</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#0a1f33"/><rect x="6" y="6" width="6" height="6" fill="#4285f4"/><rect x="12" y="9" width="6" height="6" fill="#5e97f6" opacity="0.7"/></svg><span>Compose</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#3ecf8e"><path d="M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C.111 12.876.706 14.09 1.824 14.09h9.174l.902 8.874c.015.987 1.26 1.41 1.874.637l9.261-11.652c.652-.826.057-2.038-1.06-2.038h-9.175z"/></svg><span>Supabase</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#0a1628"/><path d="M12 3c0 5 3 8 9 9-6 1-9 4-9 9-0-5-3-8-9-9 6-1 9-4 9-9z" fill="#8ab4f8"/></svg><span>Gemini AI</span></div>
-      </div>
-    </div>
-
-    <div class="prow-sep"></div>
-
-    <!-- 02 · Penny Drop -->
-    <div class="prow reveal" style="--acc:#00e5b0;"
-      data-acc="#00e5b0"
-      data-num="02"
-      data-name="Penny Drop"
-      data-tag="Web · Fintech · AI"
-      data-status="IN DEVELOPMENT"
-      data-status-color="#ffaa00"
-      data-problem-headline="You're paying for things you've forgotten exist"
-      data-problem="Subscriptions don't announce themselves. They slip through on different cards, get buried in spam folders, auto-renew without a whisper. One day you check your bank statement and realise you've been paying for three tools you stopped using six months ago. Nobody tracks this. Most people don't even know where to start."
-      data-solution="A subscription intelligence layer that pulls invoices straight from your Gmail, surfaces what you're actually paying for, and tells you what's worth it. Built for the generation that subscribes to everything and audits nothing."
-      data-features='["Auto-extracts subscriptions from Gmail — zero manual entry","Contextual AI research on every app &amp; service you pay for","Upcoming renewal tracker — 7-day cost projections","Smart categories: Productivity, Streaming, Finance &amp; more","Actionable savings — avg. user recovers ₹13,200/year"]'
-      data-tech='["Gmail API","Next.js","AI Research","Supabase"]'>
-      <div class="prow-bar"></div>
-      <div class="prow-bg"></div>
-      <div class="prow-head">
-        <span class="prow-num">02</span>
-        <h3 class="prow-name">Penny Drop</h3>
-        <span class="prow-spacer"></span>
-        <span class="prow-liner">Every subscription you pay for should be intentional.</span>
-        <span class="prow-arrow">[ VIEW ]</span>
-      </div>
-      <div class="prow-tags">
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24"><path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg><span>Gmail API</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#ffffff"><path d="M11.572 0c-.176 0-.31.001-.358.007a19.76 19.76 0 0 1-.364.033C7.443.346 4.25 2.185 2.228 5.012a11.875 11.875 0 0 0-2.119 5.243c-.096.659-.108.854-.108 1.747s.012 1.089.108 1.748c.652 4.506 3.86 8.292 8.209 9.695.779.25 1.6.422 2.534.525.363.04 1.935.04 2.299 0 1.611-.178 2.977-.577 4.323-1.264.207-.106.247-.134.219-.158-.02-.013-.9-1.193-1.955-2.62l-1.919-2.592-2.404-3.558a338.739 338.739 0 0 0-2.422-3.556c-.009-.002-.018 1.579-.023 3.51-.007 3.38-.01 3.515-.052 3.595a.426.426 0 0 1-.206.214c-.075.037-.14.044-.495.044H7.81l-.108-.068a.438.438 0 0 1-.157-.171l-.05-.106.006-4.703.007-4.705.072-.092a.645.645 0 0 1 .174-.143c.096-.047.134-.051.54-.051.478 0 .558.018.682.154.035.038 1.337 1.999 2.895 4.361a10760.433 10760.433 0 0 0 4.735 7.17l1.9 2.879.096-.063a12.317 12.317 0 0 0 2.466-2.163 11.944 11.944 0 0 0 2.824-6.134c.096-.66.108-.854.108-1.748 0-.893-.012-1.088-.108-1.747-.652-4.506-3.859-8.292-8.208-9.695a12.597 12.597 0 0 0-2.499-.523A33.119 33.119 0 0 0 11.573 0z"/></svg><span>Next.js</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#150a28"/><circle cx="12" cy="10" r="4" stroke="#aa44ff" stroke-width="1.5"/><path d="M15 13.5l3.5 3.5" stroke="#aa44ff" stroke-width="1.8" stroke-linecap="round"/><path d="M12 6V4M8 7.5L6.5 6M16 7.5L17.5 6" stroke="#aa44ff" stroke-width="1.5" stroke-linecap="round"/></svg><span>AI Research</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#3ecf8e"><path d="M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C.111 12.876.706 14.09 1.824 14.09h9.174l.902 8.874c.015.987 1.26 1.41 1.874.637l9.261-11.652c.652-.826.057-2.038-1.06-2.038h-9.175z"/></svg><span>Supabase</span></div>
-      </div>
-    </div>
-
-    <div class="prow-sep"></div>
-
-    <!-- 03 · Cost Protocol -->
-    <div class="prow reveal" style="--acc:#ff6b2b;"
-      data-acc="#ff6b2b"
-      data-num="03"
-      data-name="Cost Protocol"
-      data-tag="AI Governance · Agents · OSS"
-      data-status="PROOF OF CONCEPT"
-      data-status-color="#ff6b2b"
-      data-problem-headline="AI agents are spending money — and nobody can explain how"
-      data-problem="When an AI agent books travel, it doesn't just click a button. It reasons through options, calls tools, negotiates across providers — generating cost at every step of the decision, not just at checkout. Traditional payment systems were built for humans. They have no concept of an autonomous agent spending on your behalf. The costs are real. The accountability is zero."
-      data-solution="A proof-of-concept for AIGP — AI Governance Protocol — an open standard for tracking, attributing, and auditing the true cost of AI agent activity. Every token, every tool call, every agent-to-agent handoff is cryptographically chained into an audit trail that answers: where exactly is my AI spending my money, and why?"
-      data-features='["AIGP open standard — instruments every inference, tool call &amp; agent handoff","Multi-agent travel scenario — flight, hotel &amp; transport agents in parallel","Every AI cost attributed to the exact agent, reasoning step &amp; provider","Cryptographic audit trail — JWS ES256 signing + Merkle-SHA256 hashing","Fully local — zero external dependencies beyond a single API key"]'
-      data-tech='["Python","LangGraph","Claude API","Streamlit","SQLite","JWS ES256"]'>
-      <div class="prow-bar"></div>
-      <div class="prow-bg"></div>
-      <div class="prow-head">
-        <span class="prow-num">03</span>
-        <h3 class="prow-name">Cost Protocol</h3>
-        <span class="prow-spacer"></span>
-        <span class="prow-liner">AI agents spend your money. Now you can see exactly where.</span>
-        <span class="prow-arrow">[ VIEW ]</span>
-      </div>
-      <div class="prow-tags">
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24"><path fill="#3776ab" d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05L0 11.97l.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.26-.01h2.7z"/><path fill="#ffd43b" d="M12.58 23.82l-.9-.2-.73-.26-.59-.3-.45-.32-.34-.34-.25-.34-.16-.33-.1-.3-.04-.26-.02-.2.01-.13v-5.34l.05-.63.13-.55.21-.46.26-.38.3-.31.33-.25.35-.19.35-.14.33-.1.3-.07.26-.04.21-.02h5.95l.69-.05.59-.14.5-.22.41-.27.33-.32.27-.35.2-.36.15-.37.1-.35.07-.32.04-.27.02-.21v-3.06h2.79l.21.03.28.07.32.12.35.18.36.26.36.36.35.46.32.59.28.73.21.88.14 1.05.05 1.23-.06 1.22z"/></svg><span>Python</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1c3a5e"/><circle cx="7" cy="12" r="2.5" fill="#1c8ef9"/><circle cx="17" cy="7" r="2.5" fill="#1c8ef9"/><circle cx="17" cy="17" r="2.5" fill="#1c8ef9"/><path d="M9 11l6-3M9 13l6 3" stroke="#1c8ef9" stroke-width="1.5" stroke-linecap="round"/></svg><span>LangGraph</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1a0f0a"/><path d="M7 17l3.5-10 3.5 10M8.5 13h5" stroke="#d4a27f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="8" r="2" fill="#d4a27f"/></svg><span>Claude API</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#ff4b4b"><path d="M14.898 2.572a.5.5 0 0 0-.796 0L7.36 11.4a.5.5 0 0 0 .398.8h13.485a.5.5 0 0 0 .397-.8l-6.742-8.828zM14.898 14.372a.5.5 0 0 0-.796 0l-6.742 8.828a.5.5 0 0 0 .398.8h13.485a.5.5 0 0 0 .397-.8l-6.742-8.828z"/></svg><span>Streamlit</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#44a8dd"><path d="M21.678.521C20.467-.29 19.087.098 18.044.917c-1.533 1.19-2.74 3.354-3.443 5.596-.47-1.56-1.43-2.825-2.823-2.9C7.425 3.306 1.066 7.3.104 12.847c-.62 3.573.448 7.03 2.733 9.184 1.033.967 2.283 1.633 3.637 2.013C4.33 23.925 2.99 22.39 2.66 20.021c-1.574-2.123-2.21-5.064-1.665-7.84C2.123 6.484 7.3 2.757 11.849 3.678c1.225.245 2.34.77 3.285 1.502-.128.655-.22 1.314-.264 1.977-.105 1.584.056 3.16.456 4.67.44 1.635 1.15 3.048 2.082 4.048-1.26 4.05-.43 7.38 2.52 8.22.278.08.56.132.843.163C23.715 23.914 24 21.645 24 19.157V4.843C24 2.355 22.888.521 21.678.521z"/></svg><span>SQLite</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1a1000"/><rect x="5" y="11" width="14" height="9" rx="2" stroke="#f5a623" stroke-width="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="15.5" r="1.5" fill="#f5a623"/></svg><span>JWS ES256</span></div>
-      </div>
-    </div>
-
-    <div class="prow-sep"></div>
-
-    <!-- 04 · Project Utopia -->
-    <div class="prow reveal" style="--acc:#aa44ff;"
-      data-acc="#aa44ff"
-      data-num="04"
-      data-name="Project Utopia"
-      data-tag="Data · AI Agent · Platform"
-      data-status="IN DEVELOPMENT"
-      data-status-color="#aa44ff"
-      data-problem-headline="Getting a new dataset into production takes weeks. It shouldn't."
-      data-problem="Every time a team needs to onboard a new data source, the same painful process begins — manual schema mapping, hand-written pipelines, back-and-forth on data contracts, governance tickets that sit in queues. It takes weeks of engineering time for something that should be routine. The tooling exists. The orchestration doesn't."
-      data-solution="An AI-powered data onboarding agent that automates the full lifecycle from raw ingestion to consumption-ready views. Point it at a file, a live database, or a public dataset — it ingests, transforms, contracts, catalogs, and deploys end-to-end. LangGraph orchestrates an 8-step agentic workflow with human-in-the-loop checkpoints, every approval committed to Git."
-      data-features='["LangGraph agentic workflow — 8 steps, human-in-the-loop gates","Multi-source ingestion — local files, Postgres, Kaggle, FRED, Hugging Face &amp; more","Schema-aware Q&amp;A captures join strategy, dedup keys &amp; PII masking before codegen","Data quality enforced via Soda Core (SodaCL) &amp; Data Contract CLI (ODCS)","Full governance stack — DataHub catalog, lineage, access policies &amp; observability","Open-source throughout — DuckDB, Airflow, MinIO, Apache Iceberg, Git-as-truth"]'
-      data-tech='["LangGraph","DuckDB","Apache Airflow","Apache Iceberg","DataHub OSS","Soda Core","MinIO"]'>
-      <div class="prow-bar"></div>
-      <div class="prow-bg"></div>
-      <div class="prow-head">
-        <span class="prow-num">04</span>
-        <h3 class="prow-name">Project Utopia</h3>
-        <span class="prow-spacer"></span>
-        <span class="prow-liner">From raw data to production-ready — in minutes, not weeks.</span>
-        <span class="prow-arrow">[ VIEW ]</span>
-      </div>
-      <div class="prow-tags">
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1c3a5e"/><circle cx="7" cy="12" r="2.5" fill="#1c8ef9"/><circle cx="17" cy="7" r="2.5" fill="#1c8ef9"/><circle cx="17" cy="17" r="2.5" fill="#1c8ef9"/><path d="M9 11l6-3M9 13l6 3" stroke="#1c8ef9" stroke-width="1.5" stroke-linecap="round"/></svg><span>LangGraph</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="12" fill="#1a1400"/><circle cx="12" cy="12" r="8" fill="#ffcc00" opacity="0.15" stroke="#ffcc00" stroke-width="1.5"/><circle cx="9.5" cy="12" r="3" fill="#ffcc00"/><circle cx="14.5" cy="12" r="3" fill="#1a1400" stroke="#ffcc00" stroke-width="1.5"/></svg><span>DuckDB</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#017cee"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8zm-1-13v6l5 3-1 1.73-6-3.73V7h2z"/></svg><span>Airflow</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#071a2b"/><polygon points="12,3 21,18 3,18" fill="none" stroke="#5ea7d4" stroke-width="1.5"/><polygon points="12,9 17,18 7,18" fill="#5ea7d4" opacity="0.4"/></svg><span>Iceberg</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#041c1a"/><circle cx="12" cy="7" r="2.5" fill="#09b7a5"/><circle cx="5" cy="17" r="2.5" fill="#09b7a5"/><circle cx="19" cy="17" r="2.5" fill="#09b7a5"/><path d="M12 9.5v3M12 12.5l-5 3M12 12.5l5 3" stroke="#09b7a5" stroke-width="1.5" stroke-linecap="round"/></svg><span>DataHub</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1a0a06"/><path d="M12 4c-4.4 0-8 2.7-8 6 0 2 1.3 3.7 3.3 4.8L6 20h12l-1.3-5.2C18.7 13.7 20 12 20 10c0-3.3-3.6-6-8-6z" fill="#ff6d4a" opacity="0.3" stroke="#ff6d4a" stroke-width="1.5"/></svg><span>Soda Core</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#c72e49"><path d="M7.286 0v24l4.357-4.364V4.355L7.286 0zm9.428 0l-4.357 4.355v15.281L16.714 24V0z"/></svg><span>MinIO</span></div>
-      </div>
-    </div>
-
-    <div class="prow-sep"></div>
-
-    <!-- 05 · EvalLib -->
-    <div class="prow reveal" style="--acc:#f5c542;"
-      data-acc="#f5c542"
-      data-num="05"
-      data-name="EvalLib"
-      data-tag="AI Governance · Observability · OSS"
-      data-status="PROOF OF CONCEPT"
-      data-status-color="#f5c542"
-      data-problem-headline="AI agents run in production — and no one can prove they're behaving"
-      data-problem="Enterprises are shipping LLM agents faster than they can govern them. A model gateway sees every call, observability tools capture traces, eval frameworks score outputs — but they live in separate silos. When a risk team, a regulator, or an engineer asks 'which eval ran on this response, what version, who approved it, and what was the verdict?' nobody has a single answer. Governance becomes a spreadsheet bolted on after the fact."
-      data-solution="EvalLib is the governance and experience layer that sits above tools like Phoenix and Datadog, anchored on the enterprise model gateway. Every LLM call flows through the gateway → a trace is captured → an eval runs → the result is emitted as an OpenTelemetry event → it surfaces in a custom UI with full governance context: which eval ran, what version, who approved it, the verdict, and a link back to the trace."
-      data-features='["A control plane above Phoenix/Datadog — not another tracer","Live calls flow gateway → trace → eval → OTel event → UI","Every verdict carries governance context: eval version, approver &amp; trace link","OpenTelemetry GenAI spans with PII redaction at the collector","Local-first — single-node POC, docker compose up"]'
-      data-tech='["Phoenix","OpenTelemetry","FastAPI","React","Python","Docker"]'>
-      <div class="prow-bar"></div>
-      <div class="prow-bg"></div>
-      <div class="prow-head">
-        <span class="prow-num">05</span>
-        <h3 class="prow-name">EvalLib</h3>
-        <span class="prow-spacer"></span>
-        <span class="prow-liner">Governance for AI agents — every eval, version &amp; verdict, traceable.</span>
-        <span class="prow-arrow">[ VIEW ]</span>
-      </div>
-      <div class="prow-tags">
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#2a0a0a"/><path d="M12 3c1 3 4 4 4 8a4 4 0 0 1-8 0c0-1.5.5-2.5 1.2-3.2C9 11 9.5 13 11 13.5 10 11 12 7 12 3z" fill="#ff6b3d"/></svg><span>Phoenix</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#13123a"/><circle cx="12" cy="12" r="3" fill="#f5a800"/><circle cx="18" cy="7" r="2" fill="#7b8cff"/><path d="M14.2 10l2.4-1.6" stroke="#7b8cff" stroke-width="1.4" stroke-linecap="round"/></svg><span>OpenTelemetry</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#05312c"/><circle cx="12" cy="12" r="8" stroke="#009688" stroke-width="1.5"/><path d="M12 6l-3 7h3l-1 5 4-7h-3l1-5z" fill="#05ffd0"/></svg><span>FastAPI</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#61dafb"><path d="M12 10.11A1.87 1.87 0 1 1 10.13 12 1.86 1.86 0 0 1 12 10.11M7.37 20c.63.38 2-.2 3.6-1.7a24.22 24.22 0 0 1-1.51-1.9A22.7 22.7 0 0 1 7.06 16c-.51 2.14-.32 3.61.31 4m.71-5.74-.07-.07c-.36.77-.72 1.6-1 2.44A15.56 15.56 0 0 0 9 18.1 16 16 0 0 0 10 16.8a17.65 17.65 0 0 1-1.89-2.55m7.44 5.74c.63-.39.84-1.86.33-4a22.1 22.1 0 0 1-2.4.36 24.65 24.65 0 0 1-1.51 1.9c1.58 1.48 3 2.07 3.58 1.7M12 6.07A18.57 18.57 0 0 0 10 7.87c.65 0 1.32.07 2 .07s1.35 0 2-.07A18.57 18.57 0 0 0 12 6.07M7.37 4c-.63.39-.84 1.86-.33 4a22.1 22.1 0 0 1 2.4-.36 24.65 24.65 0 0 1 1.51-1.9C9.37 4.26 8 3.67 7.37 4m7.27 0C14 3.67 12.59 4.26 11 5.74a24.22 24.22 0 0 1 1.51 1.9 22.7 22.7 0 0 1 2.4.36c.51-2.14.32-3.61-.27-4M16.62 16c-.44.78-.89 1.48-1.38 2.1a15.56 15.56 0 0 0 2-.36A16.5 16.5 0 0 0 16.62 16m-.71-5.74A16 16 0 0 0 15 8.2a16 16 0 0 0-1-.86 17.65 17.65 0 0 1-1.89 2.55l-.07.07c.65.1 1.3.24 1.93.42z"/></svg><span>React</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24"><path fill="#3776ab" d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05L0 11.97l.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.26-.01h2.7z"/><path fill="#ffd43b" d="M12.58 23.82l-.9-.2-.73-.26-.59-.3-.45-.32-.34-.34-.25-.34-.16-.33-.1-.3-.04-.26-.02-.2.01-.13v-5.34l.05-.63.13-.55.21-.46.26-.38.3-.31.33-.25.35-.19.35-.14.33-.1.3-.07.26-.04.21-.02h5.95l.69-.05.59-.14.5-.22.41-.27.33-.32.27-.35.2-.36.15-.37.1-.35.07-.32.04-.27.02-.21v-3.06h2.79l.21.03.28.07.32.12.35.18.36.26.36.36.35.46.32.59.28.73.21.88.14 1.05.05 1.23-.06 1.22z"/></svg><span>Python</span></div>
-      </div>
-    </div>
-
-    <div class="prow-sep"></div>
-
-    <!-- 06 · Project Dupin -->
-    <div class="prow reveal" style="--acc:#ff5c8a;"
-      data-acc="#ff5c8a"
-      data-num="06"
-      data-name="Project Dupin"
-      data-tag="AI Agents · Product Research"
-      data-status="PROOF OF CONCEPT"
-      data-status-color="#ff5c8a"
-      data-problem-headline="Product discovery doesn't scale — so most teams skip it"
-      data-problem="Good product decisions come from talking to users. But structured discovery interviews are slow: a PM can run maybe five a week, then drowns in transcripts trying to find the signal. So discovery gets rushed, sampled thin, or skipped entirely — and roadmaps get built on the loudest opinion in the room instead of what users actually need."
-      data-solution="Dupin is an AI-powered user-research platform. A PM defines a product context and an objective, then deploys conversational AI agents to interview internal users at scale. Each agent probes journeys, use cases, expectations and pain points — then Dupin synthesizes findings across every conversation into discovery insights, even flagging gaps between what the product claims to do and what users actually experience."
-      data-features='["Conversational AI agents run structured discovery interviews at scale","Scoped sessions per feature, scenario, persona or use case","Synthesizes insights across every conversation automatically","Flags discrepancies between product claims &amp; user reality","Ingests PRDs, docs &amp; specs as context — PDF, DOCX &amp; PPTX"]'
-      data-tech='["Python","Streamlit","Claude API","SQLite"]'>
-      <div class="prow-bar"></div>
-      <div class="prow-bg"></div>
-      <div class="prow-head">
-        <span class="prow-num">06</span>
-        <h3 class="prow-name">Project Dupin</h3>
-        <span class="prow-spacer"></span>
-        <span class="prow-liner">AI agents that run product discovery interviews — at scale.</span>
-        <span class="prow-arrow">[ VIEW ]</span>
-      </div>
-      <div class="prow-tags">
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24"><path fill="#3776ab" d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05L0 11.97l.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.26-.01h2.7z"/><path fill="#ffd43b" d="M12.58 23.82l-.9-.2-.73-.26-.59-.3-.45-.32-.34-.34-.25-.34-.16-.33-.1-.3-.04-.26-.02-.2.01-.13v-5.34l.05-.63.13-.55.21-.46.26-.38.3-.31.33-.25.35-.19.35-.14.33-.1.3-.07.26-.04.21-.02h5.95l.69-.05.59-.14.5-.22.41-.27.33-.32.27-.35.2-.36.15-.37.1-.35.07-.32.04-.27.02-.21v-3.06h2.79l.21.03.28.07.32.12.35.18.36.26.36.36.35.46.32.59.28.73.21.88.14 1.05.05 1.23-.06 1.22z"/></svg><span>Python</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#ff4b4b"><path d="M14.898 2.572a.5.5 0 0 0-.796 0L7.36 11.4a.5.5 0 0 0 .398.8h13.485a.5.5 0 0 0 .397-.8l-6.742-8.828zM14.898 14.372a.5.5 0 0 0-.796 0l-6.742 8.828a.5.5 0 0 0 .398.8h13.485a.5.5 0 0 0 .397-.8l-6.742-8.828z"/></svg><span>Streamlit</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1a0f0a"/><path d="M7 17l3.5-10 3.5 10M8.5 13h5" stroke="#d4a27f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="8" r="2" fill="#d4a27f"/></svg><span>Claude API</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#44a8dd"><path d="M21.678.521C20.467-.29 19.087.098 18.044.917c-1.533 1.19-2.74 3.354-3.443 5.596-.47-1.56-1.43-2.825-2.823-2.9C7.425 3.306 1.066 7.3.104 12.847c-.62 3.573.448 7.03 2.733 9.184 1.033.967 2.283 1.633 3.637 2.013C4.33 23.925 2.99 22.39 2.66 20.021c-1.574-2.123-2.21-5.064-1.665-7.84C2.123 6.484 7.3 2.757 11.849 3.678c1.225.245 2.34.77 3.285 1.502-.128.655-.22 1.314-.264 1.977-.105 1.584.056 3.16.456 4.67.44 1.635 1.15 3.048 2.082 4.048-1.26 4.05-.43 7.38 2.52 8.22.278.08.56.132.843.163C23.715 23.914 24 21.645 24 19.157V4.843C24 2.355 22.888.521 21.678.521z"/></svg><span>SQLite</span></div>
-      </div>
-    </div>
-
-    <div class="prow-sep"></div>
-
-    <!-- 07 · Pattang -->
-    <div class="prow reveal" style="--acc:#4ea8ff;"
-      data-acc="#4ea8ff"
-      data-num="07"
-      data-name="Pattang"
-      data-tag="Legal Tech · SaaS · India"
-      data-status="IN DEVELOPMENT"
-      data-status-color="#4ea8ff"
-      data-problem-headline="Solo advocates run a law practice on memory and Microsoft Word"
-      data-problem="A solo advocate in India juggles dozens of matters — each with its own parties, facts, deadlines and a stack of near-identical documents. Petitions, appeals and legal notices get rebuilt from scratch every time by copy-pasting an old file and find-replacing names. Case context lives in the advocate's head, hearing dates live on paper cause-lists, and research happens across a dozen browser tabs. Nothing talks to anything."
-      data-solution="Pattang is a workspace built for the solo advocate. It generates recurring legal documents from reusable templates whose structure is fixed but whose content varies by case, keeps every document, fact, party and deadline for a matter together, and lets the advocate author in Google Docs inside their own Drive. Statute and case-law search comes from Indian Kanoon, and a calendar surfaces upcoming hearings — multi-user-ready from day one, with row-level security on every table."
-      data-features='["Generate petitions, appeals &amp; notices from learnable templates","Every document, party, fact &amp; deadline kept together per case","Author &amp; edit as Google Docs in the advocate&#39;s own Drive","On-demand statute &amp; case-law search via Indian Kanoon","Hearing &amp; deadline calendar from the advocate&#39;s cause-list"]'
-      data-tech='["React","TypeScript","Tailwind CSS","Supabase","Google Docs API"]'>
-      <div class="prow-bar"></div>
-      <div class="prow-bg"></div>
-      <div class="prow-head">
-        <span class="prow-num">07</span>
-        <h3 class="prow-name">Pattang</h3>
-        <span class="prow-spacer"></span>
-        <span class="prow-liner">The solo advocate's briefcase — cases, documents &amp; deadlines in one place.</span>
-        <span class="prow-arrow">[ VIEW ]</span>
-      </div>
-      <div class="prow-tags">
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#61dafb"><path d="M12 10.11A1.87 1.87 0 1 1 10.13 12 1.86 1.86 0 0 1 12 10.11M7.37 20c.63.38 2-.2 3.6-1.7a24.22 24.22 0 0 1-1.51-1.9A22.7 22.7 0 0 1 7.06 16c-.51 2.14-.32 3.61.31 4m.71-5.74-.07-.07c-.36.77-.72 1.6-1 2.44A15.56 15.56 0 0 0 9 18.1 16 16 0 0 0 10 16.8a17.65 17.65 0 0 1-1.89-2.55m7.44 5.74c.63-.39.84-1.86.33-4a22.1 22.1 0 0 1-2.4.36 24.65 24.65 0 0 1-1.51 1.9c1.58 1.48 3 2.07 3.58 1.7M12 6.07A18.57 18.57 0 0 0 10 7.87c.65 0 1.32.07 2 .07s1.35 0 2-.07A18.57 18.57 0 0 0 12 6.07M7.37 4c-.63.39-.84 1.86-.33 4a22.1 22.1 0 0 1 2.4-.36 24.65 24.65 0 0 1 1.51-1.9C9.37 4.26 8 3.67 7.37 4m7.27 0C14 3.67 12.59 4.26 11 5.74a24.22 24.22 0 0 1 1.51 1.9 22.7 22.7 0 0 1 2.4.36c.51-2.14.32-3.61-.27-4M16.62 16c-.44.78-.89 1.48-1.38 2.1a15.56 15.56 0 0 0 2-.36A16.5 16.5 0 0 0 16.62 16m-.71-5.74A16 16 0 0 0 15 8.2a16 16 0 0 0-1-.86 17.65 17.65 0 0 1-1.89 2.55l-.07.07c.65.1 1.3.24 1.93.42z"/></svg><span>React</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#3178c6"/><text x="12" y="16" text-anchor="middle" font-family="monospace" font-weight="700" font-size="9" fill="#fff">TS</text></svg><span>TypeScript</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#38bdf8"><path d="M12 6c-2.67 0-4.33 1.33-5 4 1-1.33 2.17-1.83 3.5-1.5.76.19 1.31.74 1.91 1.35C13.4 10.8 14.57 12 17 12c2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-.76-.19-1.3-.74-1.91-1.35C15.6 7.2 14.43 6 12 6zM7 12c-2.67 0-4.33 1.33-5 4 1-1.33 2.17-1.83 3.5-1.5.76.19 1.3.74 1.91 1.35C8.4 16.8 9.57 18 12 18c2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-.76-.19-1.3-.74-1.91-1.35C10.6 13.2 9.43 12 7 12z"/></svg><span>Tailwind</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="#3ecf8e"><path d="M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C.111 12.876.706 14.09 1.824 14.09h9.174l.902 8.874c.015.987 1.26 1.41 1.874.637l9.261-11.652c.652-.826.057-2.038-1.06-2.038h-9.175z"/></svg><span>Supabase</span></div>
-        <div class="prow-tag-chip"><svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#0a2818"/><rect x="6" y="4" width="12" height="16" rx="1.5" fill="#4285f4"/><path d="M9 9h6M9 12h6M9 15h4" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span>Google Docs</span></div>
-      </div>
-    </div>
-
+      <div class="filters" id="filters"></div>
+    </header>
+    <div class="grid" id="grid"></div>
   </div>
 </section>
 
-<!-- ═══════════════ PROJECT MODAL ═══════════════ -->
-<div class="proj-modal" id="proj-modal">
-  <div class="proj-modal-backdrop"></div>
-  <div class="proj-modal-card">
-
-    <div class="proj-modal-viewport">
-      <div class="proj-modal-slides">
-
-        <!-- Slide 0: Problem -->
-        <div class="proj-modal-slide active">
-          <div class="proj-modal-eyebrow prob-eyebrow">The Problem</div>
-          <h2 class="proj-modal-headline prob-headline"></h2>
-          <div class="proj-modal-body prob-body"></div>
-        </div>
-
-        <!-- Slide 1: Solution -->
-        <div class="proj-modal-slide">
-          <div class="proj-modal-eyebrow sol-subtitle"></div>
-          <div class="proj-modal-status">
-            <div class="proj-modal-status-dot sol-status-dot"></div>
-            <span class="proj-modal-status-text sol-status-text"></span>
+<!-- ═══════════════ PROJECT DETAIL OVERLAY ═══════════════ -->
+<div class="ov" id="ov">
+  <div class="ov-backdrop" data-close></div>
+  <div class="ov-card" id="ovCard">
+    <div class="ov-head">
+      <div class="ov-id">
+        <span class="ov-idnum" id="ovNum">01</span>
+        <span class="ov-name" id="ovName">Project</span>
+      </div>
+      <div class="ov-head-actions">
+        <div class="links" id="ovLinks"></div>
+        <button class="ov-close" data-close>[ ESC ]</button>
+      </div>
+    </div>
+    <div class="ov-view">
+      <div class="slide active" id="slide0">
+        <div class="s-eyebrow">01 — Overview &amp; Value</div>
+        <div class="s0-grid">
+          <div class="s0-main">
+            <h2 class="s-headline" id="ovHeadline"></h2>
+            <p class="s-lead" id="ovLead"></p>
+            <div class="benefit">
+              <span class="lbl">Business Benefit</span>
+              <p id="ovBenefit"></p>
+            </div>
           </div>
-          <h2 class="proj-modal-headline sol-name"></h2>
-          <p class="proj-modal-desc sol-desc"></p>
-          <ul class="proj-modal-features sol-features"></ul>
-          <div class="proj-modal-pills-label">Stack</div>
-          <div class="proj-modal-pills sol-pills"></div>
+          <aside class="s0-aside">
+            <div class="s-sublabel">Market Value</div>
+            <div class="market" id="ovMarket"></div>
+          </aside>
         </div>
-
+      </div>
+      <div class="slide" id="slide1">
+        <div class="s-eyebrow">02 — Architecture &amp; Build</div>
+        <h2 class="s-headline">Under the hood</h2>
+        <div class="s-sublabel">Tech Stack</div>
+        <div class="stack" id="ovStack"></div>
+        <div class="s-sublabel">Architecture Flow</div>
+        <div class="arch" id="ovArch"></div>
+        <div class="s-sublabel">Technical Highlights</div>
+        <ul class="hl" id="ovHighlights"></ul>
       </div>
     </div>
-
-    <div class="proj-modal-footer">
-      <button class="proj-modal-close">[ ESC ] Close</button>
-      <div class="proj-modal-nav">
-        <div class="proj-modal-dots">
-          <div class="proj-modal-dot active" data-slide="0"></div>
-          <div class="proj-modal-dot" data-slide="1"></div>
-        </div>
-        <button class="proj-modal-btn proj-modal-btn-prev proj-modal-prev" disabled>← Back</button>
-        <button class="proj-modal-btn proj-modal-btn-next proj-modal-next">The Build →</button>
+    <div class="ov-foot">
+      <div class="dots">
+        <div class="dot-nav active" data-slide="0"></div>
+        <div class="dot-nav" data-slide="1"></div>
+      </div>
+      <div class="nav-btns">
+        <span class="ov-slidelabel" id="ovSlideLabel" style="align-self:center;margin-right:8px;"></span>
+        <button class="nav-btn ghost" id="ovPrev" disabled>← Back</button>
+        <button class="nav-btn" id="ovNext">The Build →</button>
       </div>
     </div>
-
   </div>
 </div>
+
 
 <!-- ABOUT -->
 <section id="about">
@@ -1576,35 +1774,43 @@
       orbits.style.transform = 'translate(-50%,-50%) scale(1)';
     }, 100);
 
-    // Phase 1 → 3000ms: fade cover away, reveal "BUILT BY" text area
+    // Phase 1 → 600ms: fade cover away
     setTimeout(() => {
       cover.classList.add('fade');
-    }, 3000);
+    }, 600);
 
-    // Phase 2 → 3400ms: badge slides in
-    setTimeout(() => reveal(badge), 3400);
+    // Phase 2 → 850ms: badge slides in
+    setTimeout(() => reveal(badge), 850);
 
-    // Phase 3 → 3750ms: "BUILT BY" slides in
-    setTimeout(() => reveal(line1), 3750);
+    // Phase 3 → 1100ms: "BUILT BY" slides in
+    setTimeout(() => reveal(line1), 1100);
 
-    // Phase 4 → 4200ms: "INSTINCTS" tubelight flicker
-    setTimeout(() => {
-      line2.classList.add('tubelight-on');
-    }, 4200);
+    // Phase 4 → 1450ms: "INSTINCTS" — clean fade-in (calmer than the old flicker)
+    setTimeout(() => reveal(line2), 1450);
 
-    // Phase 5 → 5700ms: subtitle
-    setTimeout(() => reveal(sub), 5700);
+    // Phase 5 → 2050ms: subtitle
+    setTimeout(() => reveal(sub), 2050);
 
-    // Phase 6 → 6000ms: CTA buttons
-    setTimeout(() => reveal(cta), 6000);
+    // Phase 6 → 2350ms: CTA buttons
+    setTimeout(() => reveal(cta), 2350);
 
-    // Phase 7 → 6300ms: scroll indicator
-    setTimeout(() => reveal(scroll), 6300);
+    // Phase 7 → 2650ms: scroll indicator
+    setTimeout(() => reveal(scroll), 2650);
 
-    // Cleanup: remove cover from DOM after it fades
+    // Cleanup: remove cover once it has faded
     setTimeout(() => {
       if (cover) cover.remove();
-    }, 4200);
+    }, 1500);
+
+    // Safety net: never leave the hero hidden if timers are throttled
+    // (e.g. the page first loads in a background tab). Reveal everything
+    // the moment the tab becomes visible, and as a hard fallback.
+    function revealAll() {
+      [badge, line1, line2, sub, cta, scroll].forEach(el => el && reveal(el));
+      if (cover) cover.classList.add('fade');
+    }
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) revealAll(); });
+    setTimeout(revealAll, 3200);
   })();
 
   /* ── ANCHOR SCROLL ── */
@@ -1617,8 +1823,9 @@
     dest.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  /* ── JS SECTION SNAPPING ── */
+  /* ── JS SECTION SNAPPING — disabled so visitors scroll naturally ── */
   (function() {
+    return;
     const sections = Array.from(document.querySelectorAll('#hero, #projects, #about, #contact'));
     let isSnapping = false;
     let lastSnap = 0;
@@ -1674,27 +1881,7 @@
     }, { passive: true });
   })();
 
-  /* ── CUSTOM CURSOR ── */
-  const cur  = document.getElementById('cursor');
-  const ring = document.getElementById('cursor-ring');
-  let mx=0,my=0,rx=0,ry=0;
-
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cur.style.left = mx+'px'; cur.style.top = my+'px';
-  });
-
-  (function tick(){
-    rx += (mx-rx) * 0.1;
-    ry += (my-ry) * 0.1;
-    ring.style.left = rx+'px'; ring.style.top = ry+'px';
-    requestAnimationFrame(tick);
-  })();
-
-  document.querySelectorAll('a, button, .prow, .stat-box').forEach(el => {
-    el.addEventListener('mouseenter', () => { cur.style.transform='translate(-50%,-50%) scale(2)'; ring.style.transform='translate(-50%,-50%) scale(1.5)'; });
-    el.addEventListener('mouseleave', () => { cur.style.transform='translate(-50%,-50%) scale(1)'; ring.style.transform='translate(-50%,-50%) scale(1)'; });
-  });
+  /* ── CUSTOM CURSOR removed — native cursor restored for usability ── */
 
   /* ── SCROLL REVEAL ── */
   document.body.classList.add('js-ready');
@@ -1713,154 +1900,9 @@
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   setTimeout(() => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')), 2500);
 
-  /* ── PROJECT MODAL ── */
-  const modal    = document.getElementById('proj-modal');
-  const backdrop = modal.querySelector('.proj-modal-backdrop');
-  const allSlides = modal.querySelectorAll('.proj-modal-slide');
-  const dots     = modal.querySelectorAll('.proj-modal-dot');
-  const nextBtn  = modal.querySelector('.proj-modal-next');
-  const prevBtn  = modal.querySelector('.proj-modal-prev');
-  const closeBtn = modal.querySelector('.proj-modal-close');
-  let   curSlide = 0;
-
-  function goToSlide(n) {
-    // Remove active from current, wait a beat, show next
-    allSlides[curSlide].classList.remove('active');
-    dots[curSlide].classList.remove('active');
-
-    curSlide = n;
-
-    // Slight delay so the fade-out is visible before fade-in
-    setTimeout(() => {
-      allSlides[curSlide].classList.add('active');
-      dots[curSlide].classList.add('active');
-    }, 60);
-
-    prevBtn.disabled = n === 0;
-    nextBtn.textContent = n === 0 ? 'The Build →' : '✕ Close';
-  }
-
-  function openFromRow(row) {
-    const d = row.dataset;
-    const acc = d.acc || '#00f5ff';
-    modal.style.setProperty('--modal-acc', acc);
-
-    modal.querySelector('.prob-headline').textContent = d.problemHeadline || '';
-    modal.querySelector('.prob-body').innerHTML       = `<div class="proj-modal-story"><p>${d.problem || ''}</p></div>`;
-    modal.querySelector('.sol-subtitle').textContent  = d.tag || '';
-    modal.querySelector('.sol-name').textContent      = d.name || '';
-    modal.querySelector('.sol-desc').textContent      = d.solution || '';
-
-    const sdot = modal.querySelector('.sol-status-dot');
-    const stxt = modal.querySelector('.sol-status-text');
-    sdot.style.cssText = `background:${d.statusColor};box-shadow:0 0 8px ${d.statusColor};`;
-    stxt.style.color   = d.statusColor;
-    stxt.textContent   = d.status || '';
-
-    modal.querySelector('.sol-features').innerHTML =
-      JSON.parse(d.features || '[]').map(f => `<li>${f}</li>`).join('');
-
-    // ── Tech badges with inline SVG logos ──
-    const TECH = {
-      'react / vite': { label:'React / Vite', color:'#61dafb', svg:`<svg viewBox="0 0 24 24" fill="#61dafb"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38-.318-.184-.688-.277-1.092-.278zm-.005 1.09c.225 0 .406.044.558.127.666.382.955 1.835.73 3.704-.054.46-.143.945-.25 1.44-.96-.236-2.006-.417-3.107-.534-.66-.905-1.345-1.727-2.035-2.447 1.592-1.48 3.087-2.292 4.105-2.292zm-9.77.02c1.012 0 2.514.808 4.11 2.28-.686.72-1.37 1.537-2.02 2.442-1.107.117-2.154.298-3.113.538-.112-.49-.195-.964-.254-1.42-.23-1.868.054-3.32.714-3.707.19-.09.4-.127.563-.132zm4.882 3.05c.455.468.91.992 1.36 1.564-.44-.02-.89-.034-1.345-.034-.46 0-.915.01-1.36.034.44-.572.895-1.096 1.345-1.565zM12 8.1c.74 0 1.477.034 2.202.093.406.582.802 1.203 1.183 1.86.372.64.71 1.29 1.018 1.946-.308.655-.646 1.31-1.013 1.95-.38.66-.773 1.288-1.18 1.87-.728.063-1.466.098-2.21.098-.74 0-1.477-.035-2.202-.093-.406-.582-.802-1.204-1.183-1.86-.372-.64-.71-1.29-1.018-1.946.303-.657.646-1.313 1.013-1.954.38-.66.773-1.286 1.18-1.868.728-.064 1.466-.098 2.21-.098zm-3.635.254c-.24.377-.48.763-.704 1.16-.225.39-.435.782-.635 1.174-.265-.656-.49-1.31-.676-1.947.64-.15 1.315-.283 2.015-.387zm7.26 0c.695.103 1.365.23 2.006.387-.18.632-.405 1.282-.66 1.933-.2-.39-.41-.783-.64-1.174-.225-.392-.465-.774-.705-1.146zm3.063 2.26c.41-.04.81-.063 1.19-.063.8 0 1.51.09 2.088.247-.165.6-.44 1.23-.804 1.856-.357.613-.766 1.175-1.2 1.664.23-.97.397-1.958.494-2.94-.236-.266-.485-.528-.768-.764zm-15.36.004c-.285.235-.535.497-.768.762.097.98.26 1.97.49 2.94-.434-.49-.843-1.05-1.197-1.66-.366-.628-.64-1.256-.806-1.855.57-.157 1.282-.248 2.08-.248.377 0 .776.023 1.2.06zm6.09 5.23c.24-.375.48-.762.705-1.158.225-.39.435-.782.635-1.174.265.655.49 1.31.676 1.946-.64.15-1.315.283-2.015.386zm7.26 0c-.695-.103-1.365-.23-2.006-.387.18-.632.405-1.282.66-1.933.2.39.41.783.64 1.174.225.392.465.774.705 1.146zm-3.063 2.26c-.41.04-.81.063-1.19.063-.8 0-1.51-.09-2.088-.247.165-.6.44-1.23.804-1.856.357-.613.766-1.175 1.2-1.664-.23.97-.397 1.958-.494 2.94.236.266.485.528.768.764zm-8.9-.96c.434.49.843 1.05 1.197 1.66.366.628.64 1.256.806 1.855-.57-.157-1.282-.248-2.08-.248-.378 0-.777.023-1.2.06.285-.235.535-.497.768-.762-.097-.98-.26-1.97-.49-2.565zm4.882 2.19c-.455-.468-.91-.992-1.36-1.564.44.02.89.034 1.345.034.46 0 .915-.01 1.36-.034-.44.572-.895 1.096-1.345 1.565z"/></svg>` },
-      'react':    { label:'React',    color:'#61dafb', svg:`<svg viewBox="0 0 24 24" fill="#61dafb"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38z"/></svg>` },
-      'next.js':  { label:'Next.js',  color:'#ffffff', svg:`<svg viewBox="0 0 24 24" fill="#ffffff"><path d="M11.572 0c-.176 0-.31.001-.358.007a19.76 19.76 0 0 1-.364.033C7.443.346 4.25 2.185 2.228 5.012a11.875 11.875 0 0 0-2.119 5.243c-.096.659-.108.854-.108 1.747s.012 1.089.108 1.748c.652 4.506 3.86 8.292 8.209 9.695.779.25 1.6.422 2.534.525.363.04 1.935.04 2.299 0 1.611-.178 2.977-.577 4.323-1.264.207-.106.247-.134.219-.158-.02-.013-.9-1.193-1.955-2.62l-1.919-2.592-2.404-3.558a338.739 338.739 0 0 0-2.422-3.556c-.009-.002-.018 1.579-.023 3.51-.007 3.38-.01 3.515-.052 3.595a.426.426 0 0 1-.206.214c-.075.037-.14.044-.495.044H7.81l-.108-.068a.438.438 0 0 1-.157-.171l-.05-.106.006-4.703.007-4.705.072-.092a.645.645 0 0 1 .174-.143c.096-.047.134-.051.54-.051.478 0 .558.018.682.154.035.038 1.337 1.999 2.895 4.361a10760.433 10760.433 0 0 0 4.735 7.17l1.9 2.879.096-.063a12.317 12.317 0 0 0 2.466-2.163 11.944 11.944 0 0 0 2.824-6.134c.096-.66.108-.854.108-1.748 0-.893-.012-1.088-.108-1.747-.652-4.506-3.859-8.292-8.208-9.695a12.597 12.597 0 0 0-2.499-.523A33.119 33.119 0 0 0 11.573 0zm4.069 7.217c.347 0 .408.005.486.047a.473.473 0 0 1 .237.277c.018.06.023 1.365.018 4.304l-.006 4.218-.744-1.14-.746-1.14v-3.066c0-1.982.01-3.097.023-3.15a.478.478 0 0 1 .233-.296c.096-.05.13-.054.5-.054z"/></svg>` },
-      'supabase': { label:'Supabase', color:'#3ecf8e', svg:`<svg viewBox="0 0 24 24" fill="#3ecf8e"><path d="M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C.111 12.876.706 14.09 1.824 14.09h9.174l.902 8.874c.015.987 1.26 1.41 1.874.637l9.261-11.652c.652-.826.057-2.038-1.06-2.038h-9.175L11.9 1.036z"/></svg>` },
-      'python':   { label:'Python',   color:'#3776ab', svg:`<svg viewBox="0 0 24 24"><path fill="#3776ab" d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05L0 11.97l.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.26-.01h.thus--.28-.02zM12.42 3.45c-.23 0-.44.07-.61.2l-.34.36-.22.5-.1.63.01.76.14.87.28.94.39.97.46.96.5.9.51.8.49.67.44.52.37.36.28.19H17l.06-.2.03-.41v-.62l-.05-.8-.12-.93-.2-1.02-.27-1.06-.33-1.06-.38-1.01-.41-.91-.43-.78-.42-.62-.4-.45-.36-.29-.31-.13z"/><path fill="#ffd43b" d="M12.58 23.82l-.9-.2-.73-.26-.59-.3-.45-.32-.34-.34-.25-.34-.16-.33-.1-.3-.04-.26-.02-.2.01-.13v-5.34l.05-.63.13-.55.21-.46.26-.38.3-.31.33-.25.35-.19.35-.14.33-.1.3-.07.26-.04.21-.02h5.95l.69-.05.59-.14.5-.22.41-.27.33-.32.27-.35.2-.36.15-.37.1-.35.07-.32.04-.27.02-.21v-3.06h2.79l.21.03.28.07.32.12.35.18.36.26.36.36.35.46.32.59.28.73.21.88.14 1.05.05 1.23-.06 1.22-.16 1.04-.24.87-.32.71-.36.57-.4.44-.42.33-.42.24-.4.16-.36.1-.32.05-.26.01z"/></svg>` },
-      'langgraph': { label:'LangGraph', color:'#1c8ef9', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1c3a5e"/><circle cx="7" cy="12" r="2.5" fill="#1c8ef9"/><circle cx="17" cy="7" r="2.5" fill="#1c8ef9"/><circle cx="17" cy="17" r="2.5" fill="#1c8ef9"/><path d="M9 11l6-3M9 13l6 3" stroke="#1c8ef9" stroke-width="1.5" stroke-linecap="round"/></svg>` },
-      'claude api': { label:'Claude API', color:'#d4a27f', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1a0f0a"/><path d="M7 17l3.5-10 3.5 10M8.5 13h5" stroke="#d4a27f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="8" r="2" fill="#d4a27f"/></svg>` },
-      'streamlit': { label:'Streamlit', color:'#ff4b4b', svg:`<svg viewBox="0 0 24 24" fill="#ff4b4b"><path d="M14.898 2.572a.5.5 0 0 0-.796 0L7.36 11.4a.5.5 0 0 0 .398.8h13.485a.5.5 0 0 0 .397-.8l-6.742-8.828zM2.76 9.8a.5.5 0 0 0-.796 0L.121 12.2a.5.5 0 0 0 .398.8h3.685a.5.5 0 0 0 .397-.8L2.76 9.8zM14.898 14.372a.5.5 0 0 0-.796 0l-6.742 8.828a.5.5 0 0 0 .398.8h13.485a.5.5 0 0 0 .397-.8l-6.742-8.828z"/></svg>` },
-      'sqlite':    { label:'SQLite',    color:'#44a8dd', svg:`<svg viewBox="0 0 24 24" fill="#44a8dd"><path d="M21.678.521C20.467-.29 19.087.098 18.044.917a9.073 9.073 0 0 0-.471.426C16.04 2.846 14.834 5.01 14.13 7.252c-.124.4-.234.804-.332 1.21-1.04-.49-2.168-.803-3.36-.879C5.425 7.276 1.066 11.269.104 16.816c-.62 3.573.448 7.03 2.733 9.184h.001c1.033.967 2.283 1.633 3.637 2.013-.144-.119-.286-.24-.426-.366A11.67 11.67 0 0 1 2.66 24.02C1.086 21.897.45 18.956.995 16.18c1.128-5.697 6.304-9.424 10.854-8.503 1.225.245 2.34.77 3.285 1.502-.128.655-.22 1.314-.264 1.977-.105 1.584.056 3.16.456 4.67a13.41 13.41 0 0 0 1.29 3.187c-1.26 4.05-.43 7.38 2.52 8.22.278.08.56.132.843.163.01.003.02.004.03.005h.006c2.94.205 5.64-2.064 6.61-5.498.7-2.488.25-4.943-1.11-6.537-.87-1.02-2.06-1.59-3.38-1.63.42-1.75 1.19-3.44 2.24-4.95 1.12-1.6 2.53-2.96 4.06-3.83.133-.076.268-.148.405-.216C22.638 4.2 22.953 1.373 21.678.52z"/></svg>` },
-      'duckdb':    { label:'DuckDB',    color:'#ffcc00', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="12" fill="#1a1400"/><circle cx="12" cy="12" r="8" fill="#ffcc00" opacity="0.15" stroke="#ffcc00" stroke-width="1.5"/><circle cx="9.5" cy="12" r="3" fill="#ffcc00"/><circle cx="14.5" cy="12" r="3" fill="#1a1400" stroke="#ffcc00" stroke-width="1.5"/></svg>` },
-      'apache airflow': { label:'Airflow', color:'#017cee', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#00101f"/><circle cx="5" cy="12" r="2" fill="#017cee"/><circle cx="12" cy="6" r="2" fill="#017cee"/><circle cx="12" cy="18" r="2" fill="#017cee"/><circle cx="19" cy="12" r="2" fill="#017cee"/><path d="M7 11.3l3.5-4M7 12.7l3.5 4M14 7l3.5 4M14 17l3.5-4" stroke="#017cee" stroke-width="1.3" stroke-linecap="round"/></svg>` },
-      'apache iceberg': { label:'Iceberg', color:'#5ea7d4', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#071a2b"/><polygon points="12,3 21,18 3,18" fill="none" stroke="#5ea7d4" stroke-width="1.5"/><polygon points="12,9 17,18 7,18" fill="#5ea7d4" opacity="0.4"/></svg>` },
-      'datahub oss': { label:'DataHub', color:'#09b7a5', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#041c1a"/><circle cx="12" cy="7" r="2.5" fill="#09b7a5"/><circle cx="5" cy="17" r="2.5" fill="#09b7a5"/><circle cx="19" cy="17" r="2.5" fill="#09b7a5"/><path d="M12 9.5v3M12 12.5l-5 3M12 12.5l5 3" stroke="#09b7a5" stroke-width="1.5" stroke-linecap="round"/></svg>` },
-      'soda core': { label:'Soda Core', color:'#ff6d4a', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1a0a06"/><path d="M12 4c-4.4 0-8 2.7-8 6 0 2 1.3 3.7 3.3 4.8L6 20h12l-1.3-5.2C18.7 13.7 20 12 20 10c0-3.3-3.6-6-8-6z" fill="#ff6d4a" opacity="0.3" stroke="#ff6d4a" stroke-width="1.5"/><path d="M9 10.5s1 1.5 3 1.5 3-1.5 3-1.5" stroke="#ff6d4a" stroke-width="1.5" stroke-linecap="round"/></svg>` },
-      'minio':     { label:'MinIO',     color:'#c72e49', svg:`<svg viewBox="0 0 24 24" fill="#c72e49"><path d="M7.286 0v24l4.357-4.364V4.355L7.286 0zm9.428 0l-4.357 4.355v15.281L16.714 24V0z"/></svg>` },
-      'gmail api': { label:'Gmail API', color:'#ea4335', svg:`<svg viewBox="0 0 24 24"><path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>` },
-      'node.js':   { label:'Node.js',   color:'#339933', svg:`<svg viewBox="0 0 24 24" fill="#339933"><path d="M11.998 24a2.1 2.1 0 0 1-1.05-.277l-3.33-1.974c-.499-.279-.255-.378-.09-.435.663-.231.796-.283 1.502-.684.074-.042.171-.026.247.018l2.558 1.518c.094.051.227.051.312 0l9.964-5.75c.094-.055.154-.165.154-.277V6.862c0-.116-.06-.22-.156-.283l-9.961-5.74a.271.271 0 0 0-.31 0L2.831 6.581a.328.328 0 0 0-.158.282v11.497c0 .114.061.219.154.274l2.731 1.576c1.482.74 2.391-.132 2.391-.999V7.697c0-.16.124-.286.285-.286h1.24c.158 0 .285.125.285.286v11.514c0 1.953-1.064 3.073-2.916 3.073-.569 0-1.018 0-2.269-.617L1.484 19.99A2.107 2.107 0 0 1 .436 18.17V6.673A2.1 2.1 0 0 1 1.484 4.85l9.964-5.752a2.188 2.188 0 0 1 2.107 0L23.519 4.85a2.107 2.107 0 0 1 1.048 1.823v11.497a2.11 2.11 0 0 1-1.048 1.823l-9.964 5.751A2.098 2.098 0 0 1 11.998 24z"/></svg>` },
-      'postgresql':{ label:'PostgreSQL',color:'#336791', svg:`<svg viewBox="0 0 24 24" fill="#336791"><path d="M17.128 0a10.134 10.134 0 0 0-2.755.403l-.063.02A10.922 10.922 0 0 0 12.6.258C11.422.238 10.41.524 9.594 1 8.58.721 7.122.24 5.364.336 4.14.403 2.804.775 1.814 1.79.827 2.797.265 4.318.324 6.388c.03 1.058.374 2.22.739 3.033l.025.055-.015.05C.599 11.888 1.372 16.07 3.627 18.625c1.424 1.61 3.534 2.39 5.426 2.072.757.374 1.723.673 3.03.698 1.573.028 2.879-.481 3.773-1.233 1.09.253 2.244.123 3.294-.405 2.755-1.399 4.56-5.185 4.437-10.152a18.166 18.166 0 0 0-.053-1.138l.02-.021c.63-.682 1.081-1.476 1.138-2.286.085-1.18-.465-2.26-1.733-2.86zM6.025 20.18c-1.593.271-3.388-.382-4.636-1.791C-.103 16.36-.71 12.716.581 10.2c.148.894.37 1.742.61 2.464l.003.01c.44 1.324 1.075 2.293 1.994 2.87.387.245.773.41 1.145.497a5.948 5.948 0 0 0 1.293.06c.234.38.513.74.84 1.058.517.498 1.122.885 1.761 1.07-.89.395-1.49.78-2.202.95z"/></svg>` },
-      'capacitor': { label:'Capacitor', color:'#53b9ff', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#001f3f"/><path d="M5 12h4M15 12h4M10 7l-2 5 2 5M14 7l2 5-2 5" stroke="#53b9ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
-      'gemini ai': { label:'Gemini AI', color:'#8ab4f8', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#0a1628"/><path d="M12 3c0 5 3 8 9 9-6 1-9 4-9 9-0-5-3-8-9-9 6-1 9-4 9-9z" fill="#8ab4f8"/></svg>` },
-      'ai research':{ label:'AI Research',color:'#aa44ff', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#150a28"/><circle cx="12" cy="10" r="4" stroke="#aa44ff" stroke-width="1.5"/><path d="M15 13.5l3.5 3.5" stroke="#aa44ff" stroke-width="1.8" stroke-linecap="round"/><path d="M12 6V4M8 7.5L6.5 6M16 7.5L17.5 6" stroke="#aa44ff" stroke-width="1.5" stroke-linecap="round"/></svg>` },
-      'jws es256': { label:'JWS ES256', color:'#f5a623', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1a1000"/><rect x="5" y="11" width="14" height="9" rx="2" stroke="#f5a623" stroke-width="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="15.5" r="1.5" fill="#f5a623"/></svg>` },
-      'kotlin':    { label:'Kotlin',    color:'#a97bff', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1b0a2e"/><path d="M5 5h14L12 12l7 7H5z" fill="#a97bff"/></svg>` },
-      'jetpack compose': { label:'Jetpack Compose', color:'#4285f4', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#0a1f33"/><rect x="6" y="6" width="6" height="6" fill="#4285f4"/><rect x="12" y="9" width="6" height="6" fill="#5e97f6" opacity="0.7"/></svg>` },
-      'compose':   { label:'Compose',   color:'#4285f4', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#0a1f33"/><rect x="6" y="6" width="6" height="6" fill="#4285f4"/><rect x="12" y="9" width="6" height="6" fill="#5e97f6" opacity="0.7"/></svg>` },
-      'phoenix':   { label:'Phoenix',   color:'#ff6b3d', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#2a0a0a"/><path d="M12 3c1 3 4 4 4 8a4 4 0 0 1-8 0c0-1.5.5-2.5 1.2-3.2C9 11 9.5 13 11 13.5 10 11 12 7 12 3z" fill="#ff6b3d"/></svg>` },
-      'opentelemetry': { label:'OpenTelemetry', color:'#f5a800', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#13123a"/><circle cx="12" cy="12" r="3" fill="#f5a800"/><circle cx="18" cy="7" r="2" fill="#7b8cff"/><path d="M14.2 10l2.4-1.6" stroke="#7b8cff" stroke-width="1.4" stroke-linecap="round"/></svg>` },
-      'fastapi':   { label:'FastAPI',   color:'#009688', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#05312c"/><circle cx="12" cy="12" r="8" stroke="#009688" stroke-width="1.5"/><path d="M12 6l-3 7h3l-1 5 4-7h-3l1-5z" fill="#05ffd0"/></svg>` },
-      'docker':    { label:'Docker',    color:'#2496ed', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#08263d"/><g fill="#2496ed"><rect x="5" y="11" width="2.4" height="2.4"/><rect x="8" y="11" width="2.4" height="2.4"/><rect x="11" y="11" width="2.4" height="2.4"/><rect x="14" y="11" width="2.4" height="2.4"/><rect x="8" y="8" width="2.4" height="2.4"/><rect x="11" y="8" width="2.4" height="2.4"/></g><path d="M18 11c.8-.5 1.4-.3 1.8 0-.2 1-1 1.3-1.8 1.1" fill="#2496ed"/></svg>` },
-      'typescript':{ label:'TypeScript', color:'#3178c6', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#3178c6"/><text x="12" y="16" text-anchor="middle" font-family="monospace" font-weight="700" font-size="9" fill="#fff">TS</text></svg>` },
-      'tailwind css': { label:'Tailwind CSS', color:'#38bdf8', svg:`<svg viewBox="0 0 24 24" fill="#38bdf8"><path d="M12 6c-2.67 0-4.33 1.33-5 4 1-1.33 2.17-1.83 3.5-1.5.76.19 1.31.74 1.91 1.35C13.4 10.8 14.57 12 17 12c2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-.76-.19-1.3-.74-1.91-1.35C15.6 7.2 14.43 6 12 6zM7 12c-2.67 0-4.33 1.33-5 4 1-1.33 2.17-1.83 3.5-1.5.76.19 1.3.74 1.91 1.35C8.4 16.8 9.57 18 12 18c2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-.76-.19-1.3-.74-1.91-1.35C10.6 13.2 9.43 12 7 12z"/></svg>` },
-      'google docs api': { label:'Google Docs API', color:'#4285f4', svg:`<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#0a2818"/><rect x="6" y="4" width="12" height="16" rx="1.5" fill="#4285f4"/><path d="M9 9h6M9 12h6M9 15h4" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>` },
-    };
-
-    const techItems = JSON.parse(d.tech || '[]');
-    modal.querySelector('.sol-pills').innerHTML = techItems.map(t => {
-      const key = t.toLowerCase();
-      const meta = TECH[key] || null;
-      const color = meta ? meta.color : '#7a9faf';
-      const label = meta ? meta.label : t;
-      const svgIcon = meta ? meta.svg : `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="${color}22"/><text x="12" y="17" text-anchor="middle" font-size="11" font-family="monospace" fill="${color}">${label.charAt(0)}</text></svg>`;
-      return `<div class="proj-modal-pill">
-        ${svgIcon}
-        <span style="color:${color}">${label}</span>
-      </div>`;
-    }).join('');
-
-    // Reset to slide 0
-    allSlides.forEach(s => s.classList.remove('active'));
-    dots.forEach(d => d.classList.remove('active'));
-    curSlide = 0;
-    allSlides[0].classList.add('active');
-    dots[0].classList.add('active');
-    prevBtn.disabled = true;
-    nextBtn.textContent = 'The Build →';
-
-    modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal() {
-    modal.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  nextBtn.addEventListener('click', () => { curSlide === 0 ? goToSlide(1) : closeModal(); });
-  prevBtn.addEventListener('click', () => { if (curSlide === 1) goToSlide(0); });
-  closeBtn.addEventListener('click', closeModal);
-  backdrop.addEventListener('click', closeModal);
-  document.addEventListener('keydown', e => {
-    if (!modal.classList.contains('open')) return;
-    if (e.key === 'Escape')     closeModal();
-    if (e.key === 'ArrowRight' && curSlide === 0) goToSlide(1);
-    if (e.key === 'ArrowLeft'  && curSlide === 1) goToSlide(0);
-  });
-
-  document.querySelectorAll('.prow').forEach(row => {
-    row.addEventListener('click', () => openFromRow(row));
-  });
-
-  /* ── AVATAR PHOTO LOADER ──
-     To use your real LinkedIn photo:
-     1. Go to your LinkedIn profile
-     2. Right-click your profile photo → "Copy image address"
-     3. Replace the URL below with that address
-     Or set PHOTO_URL to any direct image URL.
-  ── */
-  const PHOTO_URL = ''; // ← paste your photo URL here
-
-  if (PHOTO_URL) {
-    const avatarWrap = document.getElementById('profile-avatar');
-    const img = document.createElement('img');
-    img.src = PHOTO_URL;
-    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;';
-    img.onload = () => {
-      document.getElementById('avatar-fallback').style.display = 'none';
-      avatarWrap.appendChild(img);
-    };
-  }
+  /* project grid + detail overlay are driven by projects-data.js / projects-app.js */
 </script>
+<script src="projects-data.js"></script>
+<script src="projects-app.js"></script>
 </body>
 </html>
