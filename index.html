@@ -1366,6 +1366,11 @@
     transition: opacity .5s var(--ease-out-expo), transform .5s var(--ease-out-expo);
   }
   .slide.active { opacity: 1; transform: none; pointer-events: auto; visibility: visible; }
+  /* Closed overlay stays in the DOM as a fixed, centered, invisible layer.
+     Its .active slide keeps pointer-events:auto, which steals clicks from the
+     project tiles sitting under it (intermittent, depending on scroll). Pull the
+     whole slide subtree out of hit-testing while the overlay is closed. */
+  .ov:not(.open) .slide { pointer-events: none; visibility: hidden; }
   .slide::-webkit-scrollbar { width: 8px; }
   .slide::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); }
   .s-eyebrow {
