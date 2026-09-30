@@ -36,6 +36,8 @@
     grid.innerHTML = '';
     const list = PROJECTS.filter(p => activeFilter === 'all' || p.filters.includes(activeFilter));
     document.getElementById('m-count').textContent = list.length;
+    const aboutCount = document.getElementById('about-count');
+    if (aboutCount) aboutCount.textContent = PROJECTS.length;
 
     list.forEach((p, i) => {
       const idx = PROJECTS.indexOf(p);
