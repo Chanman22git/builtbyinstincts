@@ -149,8 +149,12 @@
 
   /* ── link buttons (shared by both slides) ── */
   function linksHtml(p) {
-    const repo = `<a class="lnk lnk-repo" href="${p.repoUrl}" target="_blank" rel="noopener">${ICONS.github}View Repo</a>`;
-    const ui = `<a class="lnk lnk-ui" href="${p.uiUrl}" target="_blank" rel="noopener" ${p.uiDummy ? 'data-dummy="1"' : ''}>${ICONS.ui}Live UI</a>`;
+    const repo = p.repoPrivate
+      ? `<span class="lnk lnk-repo lnk-private">${ICONS.github}Private · on request</span>`
+      : `<a class="lnk lnk-repo" href="${p.repoUrl}" target="_blank" rel="noopener">${ICONS.github}View Repo</a>`;
+    const ui = p.uiUrl
+      ? `<a class="lnk lnk-ui" href="${p.uiUrl}" target="_blank" rel="noopener">${ICONS.ui}Live UI</a>`
+      : '';
     return ui + repo;
   }
 

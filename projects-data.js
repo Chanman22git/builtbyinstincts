@@ -4,8 +4,10 @@
    benefit / market / arch / repoUrl / uiUrl.
 
    ⚠ Market figures verified against public sources (2024-26)
-     and attributed inline. The only remaining DUMMY markers are
-     placeholder live-UI URLs — swap in real links later.
+     and attributed inline.
+   uiUrl is optional — omit it when there's no public deploy.
+   repoPrivate: true shows "Private · on request" instead of a
+   repo link (private repos 404 for visitors).
    ════════════════════════════════════════════════════ */
 
 const ICONS = {
@@ -46,8 +48,7 @@ const PROJECTS = [
       'Native Kotlin/Compose Android port at full feature parity',
     ],
     stack: ['React / Vite', 'Capacitor', 'Kotlin', 'Jetpack Compose', 'Supabase', 'Gemini AI'],
-    repoUrl: 'https://github.com/Chanman22git/my-pait',
-    uiUrl: 'https://mypait.app', uiDummy: true, /* DUMMY */
+    repoUrl: 'https://github.com/Chanman22git/my-pait', repoPrivate: true,
   },
   {
     num: '03', name: 'Penny Drop', acc: '#00e5b0',
@@ -74,7 +75,7 @@ const PROJECTS = [
     ],
     stack: ['React / Vite', 'TypeScript', 'Tailwind CSS'],
     repoUrl: 'https://github.com/Chanman22git/Penny-Drop',
-    uiUrl: 'https://pennydrop.app', uiDummy: true, /* DUMMY */
+    uiUrl: 'https://chanman22git.github.io/Penny-Drop/',
   },
   {
     num: '04', name: 'Cost Protocol', acc: '#ff6b2b',
@@ -100,8 +101,7 @@ const PROJECTS = [
       'Runs fully local — only a single LLM API key, no external services',
     ],
     stack: ['Python', 'Claude API', 'Streamlit', 'SQLite', 'JWS ES256'],
-    repoUrl: 'https://github.com/Chanman22git/Project-Cost-Protocol',
-    uiUrl: '#', uiDummy: true, /* DUMMY — no public UI yet */
+    repoUrl: 'https://github.com/Chanman22git/Project-Cost-Protocol', repoPrivate: true,
   },
   {
     num: '05', name: 'Project Utopia', acc: '#aa44ff',
@@ -127,8 +127,7 @@ const PROJECTS = [
       'Governance scaffolding — DataHub catalog, lineage & access policies',
     ],
     stack: ['LangGraph', 'DuckDB', 'Apache Airflow', 'Apache Iceberg', 'DataHub OSS', 'Soda Core', 'MinIO'],
-    repoUrl: 'https://github.com/Chanman22git/Project-Utopia',
-    uiUrl: '#', uiDummy: true, /* DUMMY */
+    repoUrl: 'https://github.com/Chanman22git/Project-Utopia', repoPrivate: true,
   },
   {
     num: '02', name: 'EvalLib', acc: '#f5c542',
@@ -155,7 +154,6 @@ const PROJECTS = [
     ],
     stack: ['Phoenix', 'OpenTelemetry', 'FastAPI', 'React', 'Python', 'Docker'],
     repoUrl: 'https://github.com/Chanman22git/EvalLib',
-    uiUrl: '#', uiDummy: true, /* DUMMY */
   },
   {
     num: '06', name: 'Project Dupin', acc: '#ff5c8a',
@@ -182,7 +180,6 @@ const PROJECTS = [
     ],
     stack: ['Python', 'Streamlit', 'Claude API', 'SQLite'],
     repoUrl: 'https://github.com/Chanman22git/Project-Dupin',
-    uiUrl: '#', uiDummy: true, /* DUMMY */
   },
   {
     num: '07', name: 'Pattang', acc: '#4ea8ff',
@@ -209,7 +206,7 @@ const PROJECTS = [
     ],
     stack: ['React', 'TypeScript', 'Tailwind CSS', 'Supabase', 'Claude API'],
     repoUrl: 'https://github.com/Chanman22git/Pattang',
-    uiUrl: '#', uiDummy: true, /* DUMMY */
+    uiUrl: 'https://chanman22git.github.io/Pattang/',
   },
   {
     num: '08', name: 'Manasa Dairy', acc: '#4fb87a',

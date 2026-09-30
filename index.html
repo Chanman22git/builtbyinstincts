@@ -1467,10 +1467,8 @@
   .lnk-ui:hover { box-shadow: 0 0 28px color-mix(in srgb, var(--tacc) 60%, transparent); }
   .lnk-repo { color: var(--text); background: transparent; border: 1px solid var(--border-strong); }
   .lnk-repo:hover { background: rgba(255,255,255,0.05); border-color: var(--tacc); color: var(--tacc); }
-  .lnk[data-dummy="1"]::after {
-    content: 'demo'; font-size: 0.5rem; letter-spacing: 0.1em; opacity: 0.6;
-    border: 1px solid currentColor; padding: 1px 4px; margin-left: 4px;
-  }
+  .lnk-private { opacity: 0.6; cursor: default; }
+  .lnk-private:hover { background: transparent; border-color: var(--border-strong); color: var(--text); }
   .ov-foot {
     display: flex; align-items: center; justify-content: space-between;
     padding: 18px 36px; border-top: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;
@@ -1738,10 +1736,10 @@
     <div class="contact-box reveal">
       <div class="corner-dec tl"></div><div class="corner-dec tr"></div>
       <div class="corner-dec bl"></div><div class="corner-dec br"></div>
-      <span class="contact-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="49212c252526092b3c20253d2b3020273a3d20272a3d3a672a2624">[email&#160;protected]</a></span>
+      <span class="contact-email"><a href="mailto:vchandrasekar410@gmail.com">vchandrasekar410@gmail.com</a></span>
       <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-        <a href="/cdn-cgi/l/email-protection#1f777a7373705f7d6a76736b7d6676716c6b76717c6b6c317c7072" class="btn btn-primary">Send Message</a>
-        <a href="#" class="btn btn-ghost">View GitHub</a>
+        <a href="mailto:vchandrasekar410@gmail.com" class="btn btn-primary">Send Message</a>
+        <a href="https://github.com/Chanman22git" class="btn btn-ghost" target="_blank" rel="noopener">View GitHub</a>
       </div>
       <div style="margin-top:38px;padding-top:38px;border-top:1px solid rgba(0,245,255,0.07);">
         <p style="font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.22em;color:var(--muted);text-transform:uppercase;">
